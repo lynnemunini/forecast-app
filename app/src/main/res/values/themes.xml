@@ -3,5 +3,7 @@
 
     <style name="Theme.ForecastApplication" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:statusBarColor">@color/NavyBlue</item>
+        <item name="android:navigationBarColor">@color/NavyBlue
+        </item>
     </style>
 </resources>
