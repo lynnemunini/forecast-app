@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+<!--    Declare need for foreground location-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Include only if your app benefits from precise location access. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -30,6 +34,10 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+<!--        Declare a foreground service type of location-->
+<!--        <service-->
+<!--            android:name="MyNavigationService"-->
+<!--            android:foregroundServiceType="location" />-->
     </application>
 
 </manifest>

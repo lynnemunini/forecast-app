@@ -1,6 +1,7 @@
 package com.grayseal.forecastapp
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +11,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.grayseal.forecastapp.navigation.WeatherNavigation
 import com.grayseal.forecastapp.ui.theme.ForecastApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,6 +27,20 @@ class MainActivity : ComponentActivity() {
                 WeatherNavigation()
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), 12345)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        Toast.makeText(this,"permission callback",Toast.LENGTH_LONG).show()
     }
 }
 
