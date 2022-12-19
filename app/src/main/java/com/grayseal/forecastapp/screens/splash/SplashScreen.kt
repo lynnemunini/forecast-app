@@ -28,7 +28,7 @@ fun SplashScreen(navController: NavController) {
         androidx.compose.animation.core.Animatable(0f)
     }
     LaunchedEffect(key1 = true, block = {
-        scale.animateTo(targetValue = 1.5f, animationSpec = tween(durationMillis = 1000, easing = {
+        scale.animateTo(targetValue = 0.8f, animationSpec = tween(durationMillis = 1000, easing = {
             OvershootInterpolator(4f).getInterpolation(it)
         }))
         delay(1000L)
