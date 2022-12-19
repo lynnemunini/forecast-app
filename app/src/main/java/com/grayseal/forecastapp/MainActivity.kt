@@ -30,7 +30,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             WeatherApp {
                 RequestPermission(permission = android.Manifest.permission.ACCESS_COARSE_LOCATION)
-                WeatherNavigation()
             }
         }
     }

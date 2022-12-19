@@ -25,10 +25,12 @@ fun RequestPermission(
         deniedContent = { shouldShowRationale ->
             PermissionDeniedContent(
                 shouldShowRationale = shouldShowRationale
-            ) { permissionState.launchPermissionRequest() }
+            ) {
+                permissionState.launchPermissionRequest()
+            }
         },
         content = {
-
+            WeatherNavigation()
         }
     )
 }
@@ -46,7 +48,6 @@ fun HandleRequest(
         }
         is PermissionStatus.Denied -> {
             deniedContent(permissionState.status.shouldShowRationale)
-            content()
         }
     }
 }
@@ -80,5 +81,4 @@ fun PermissionDeniedContent(
     } else {
         Content(onClick = onRequestPermission)
     }
-
 }
