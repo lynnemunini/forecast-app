@@ -105,9 +105,8 @@ dependencies {
     kapt("androidx.room:room-compiler:$room_version")
     implementation "androidx.room:room-ktx:$room_version"
 
-    // Accompanist library to provide support for Android runtime permissions
-    implementation "com.google.accompanist:accompanist-permissions:0.28.0"
-
+    // Google play's location library
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
 
 }
 
