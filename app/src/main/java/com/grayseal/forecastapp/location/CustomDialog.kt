@@ -1,19 +1,20 @@
 package com.grayseal.forecastapp.location
 
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -22,15 +23,13 @@ import androidx.compose.ui.window.Dialog
 
 
 @Composable
-fun CustomDialogLocation(
+fun CustomDialog(
     title: String? = "Message",
     desc: String? = "Your Message",
     enableLocation: MutableState<Boolean>,
-    onClick: () -> Unit
 ) {
-    val context = LocalContext.current
     Dialog(
-        onDismissRequest = { enableLocation.value = false }
+        onDismissRequest = { enableLocation.value = true }
     ) {
         Box(
             modifier = Modifier
@@ -49,7 +48,7 @@ fun CustomDialogLocation(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                //.........................Text: title
+                // title
                 Text(
                     text = title!!,
                     textAlign = TextAlign.Center,
@@ -85,7 +84,9 @@ fun CustomDialogLocation(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 32.dp, end = 32.dp),
-                    onClick = onClick,
+                    onClick = {
+                        enableLocation.value = true
+                    },
                     contentPadding = PaddingValues(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent
@@ -104,33 +105,12 @@ fun CustomDialogLocation(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Enable",
+                            text = "OK",
                             fontSize = 20.sp,
                             color = Color.White
                         )
                     }
                 }
-
-
-                Spacer(modifier = Modifier.height(12.dp))
-
-
-                TextButton(onClick = {
-                    enableLocation.value = false
-                    Toast.makeText(
-                        context,
-                        "Permission to access location denied",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }) {
-                    Text(
-                        "Cancel",
-                        style = MaterialTheme.typography.labelLarge,
-                        color = Color(0xFF23224a)
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
 
             }
         }

@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
@@ -18,6 +20,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.grayseal.forecastapp.location.CustomDialog
 import com.grayseal.forecastapp.navigation.WeatherNavigation
 import com.grayseal.forecastapp.ui.theme.ForecastApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,7 +54,7 @@ class MainActivity : ComponentActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            /* Calling ActivityCompat#requestPermissions to request the missing permissions and 
+            /* Calling ActivityCompat#requestPermissions to request the missing permissions and
             then overriding
                 public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                                          int[] grantResults)
@@ -95,6 +98,19 @@ fun WeatherApp() {
         ) {
             WeatherNavigation()
         }
+    }
+}
+
+@Composable
+fun Content(onClick: () -> Unit) {
+    val enableLocation = remember { mutableStateOf(false) }
+    if (!enableLocation.value) {
+        CustomDialog(
+            title = "Turn On Location Service",
+            desc = "We understand that your privacy is important, and we only request access to your location in order to provide you with the best possible weather experience.\n\n" +
+                    "Without this permission you will have to manually enter your location.",
+            enableLocation
+        )
     }
 }
 
