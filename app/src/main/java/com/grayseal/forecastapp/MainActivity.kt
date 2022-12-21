@@ -1,6 +1,7 @@
 package com.grayseal.forecastapp
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -44,7 +45,6 @@ class MainActivity : ComponentActivity() {
         // To create an instance of the fused Location Provider Client
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-
         // Determine whether app was already granted the permission
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -54,37 +54,58 @@ class MainActivity : ComponentActivity() {
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            /* Calling ActivityCompat#requestPermissions to request the missing permissions and
-            then overriding
-                public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                                                         int[] grantResults)
-                to handle the case where the user grants the permission */
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ),
-                1
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            ) {
+                // Show Alert dialog to user to grant the permission
+                AlertDialog.Builder(this)
+                    .setTitle("Location Permission")
+                    .setMessage(
+                        "We only request access to your location in order to provide you with the best possible weather experience.\n" +
+                                "Without this permission you will have to manually enter your location."
+                    )
+                    .setPositiveButton("OK") { _, _ ->
+                        // Request the permission
+                        ActivityCompat.requestPermissions(
+                            this,
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_COARSE_LOCATION
+                            ),
+                            1
+                        )
+                    }
+                    .setNegativeButton("Cancel") { _, _ ->
+                        // Close the app
+                        finish()
+                    }
+                    // Prevent dialog from being dismissed by clicking outside
+                    .setCancelable(false)
+                    .create()
+                    .show()
+            }
+        } else {
+            // To get the current location
+            fusedLocationClient.getCurrentLocation(
+                Priority.PRIORITY_HIGH_ACCURACY,
+                CancellationTokenSource().token
             )
-            return
-        }
-
-        // To get the current location
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, CancellationTokenSource().token)
-            .addOnSuccessListener { location: Location? ->
-                // Get location. In some rare situations this can be null.
-                if (location != null) {
-                    Toast.makeText(
-                        this,
-                        "Location: lat = ${location.latitude} lon = ${location.longitude}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                .addOnSuccessListener { location: Location? ->
+                    // Get location. In some rare situations this can be null.
+                    if (location != null) {
+                        Toast.makeText(
+                            this,
+                            "Location: lat = ${location.latitude} lon = ${location.longitude}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Cannot get location", Toast.LENGTH_SHORT).show()
-            }
+                .addOnFailureListener {
+                    Toast.makeText(this, "Cannot get location", Toast.LENGTH_LONG).show()
+                }
+        }
     }
 }
 
