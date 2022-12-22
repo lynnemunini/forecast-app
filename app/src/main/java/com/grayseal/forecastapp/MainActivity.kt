@@ -122,18 +122,6 @@ fun WeatherApp() {
     }
 }
 
-@Composable
-fun Content(onClick: () -> Unit) {
-    val enableLocation = remember { mutableStateOf(false) }
-    if (!enableLocation.value) {
-        CustomDialog(
-            title = "Turn On Location Service",
-            desc = "We understand that your privacy is important, and we only request access to your location in order to provide you with the best possible weather experience.\n\n" +
-                    "Without this permission you will have to manually enter your location.",
-            enableLocation
-        )
-    }
-}
 
 @Preview(showBackground = true)
 @Composable

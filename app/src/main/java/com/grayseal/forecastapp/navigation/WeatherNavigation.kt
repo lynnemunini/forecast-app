@@ -18,7 +18,7 @@ fun WeatherNavigation(){
             SplashScreen(navController = navController)
         }
         composable(WeatherScreens.WeatherScreen.name){
-            WeatherScreen(navController = navController, mainViewModel)
+            WeatherScreen(navController = navController, mainViewModel, lat = -1.2369159, lon = 36.8911082)
         }
         composable(WeatherScreens.ForecastScreen.name){
             ForecastScreen(navController = navController, mainViewModel)

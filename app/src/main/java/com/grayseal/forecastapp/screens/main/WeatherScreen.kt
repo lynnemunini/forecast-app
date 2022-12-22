@@ -20,34 +20,41 @@ import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.model.Weather
 
 @Composable
-fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel){
+fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, lat: Double, lon: Double) {
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(
-            brush = Brush.linearGradient(
-                colors = gradientColors,
-                start = Offset(0f, Float.POSITIVE_INFINITY),
-                end = Offset(Float.POSITIVE_INFINITY, 0f)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = gradientColors,
+                    start = Offset(0f, Float.POSITIVE_INFINITY),
+                    end = Offset(Float.POSITIVE_INFINITY, 0f)
+                )
             )
-        )){
-        Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-            ShowData(mainViewModel)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            ShowData(mainViewModel, lat, lon)
         }
     }
 }
 
 @Composable
-fun ShowData(mainViewModel: MainViewModel){
-    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(initialValue = DataOrException(loading = true)){
-        value = mainViewModel.getWeatherData(-1.2369159, 36.8911082)
+fun ShowData(mainViewModel: MainViewModel, lat: Double, lon: Double) {
+    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
+        initialValue = DataOrException(loading = true)
+    ) {
+        value = mainViewModel.getWeatherData(lat, lon)
     }.value
 
     if (weatherData.loading == true) {
         CircularProgressIndicator()
-    }
-    else if (weatherData.data != null){
+    } else if (weatherData.data != null) {
 
-            Text(text = weatherData.data!!.current.weather[0].description, color = Color.White)
+        Text(text = weatherData.data!!.current.weather[0].description, color = Color.White)
     }
 }
