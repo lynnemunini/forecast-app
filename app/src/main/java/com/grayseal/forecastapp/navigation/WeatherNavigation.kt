@@ -1,5 +1,7 @@
 package com.grayseal.forecastapp.navigation
 
+import android.content.Context
+import android.location.Location
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -10,7 +12,7 @@ import com.grayseal.forecastapp.screens.main.MainViewModel
 import com.grayseal.forecastapp.screens.main.WeatherScreen
 
 @Composable
-fun WeatherNavigation(){
+fun WeatherNavigation(context: Context){
     val navController = rememberNavController()
     val mainViewModel = hiltViewModel<MainViewModel>()
     NavHost(navController = navController, startDestination = WeatherScreens.SplashScreen.name){
@@ -18,7 +20,7 @@ fun WeatherNavigation(){
             SplashScreen(navController = navController)
         }
         composable(WeatherScreens.WeatherScreen.name){
-            WeatherScreen(navController = navController, mainViewModel, lat = -1.2369159, lon = 36.8911082)
+            WeatherScreen(navController = navController, mainViewModel, context)
         }
         composable(WeatherScreens.ForecastScreen.name){
             ForecastScreen(navController = navController, mainViewModel)

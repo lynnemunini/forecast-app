@@ -2,6 +2,7 @@ package com.grayseal.forecastapp
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
@@ -30,101 +31,31 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WeatherApp()
+            WeatherApp(this)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        // To create an instance of the fused Location Provider Client
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-        // Determine whether app was already granted the permission
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-            ) {
-                // Show Alert dialog to user to grant the permission
-                AlertDialog.Builder(this)
-                    .setTitle("Location Permission")
-                    .setMessage(
-                        "We only request access to your location in order to provide you with the best possible weather experience.\n" +
-                                "Without this permission you will have to manually enter your location."
-                    )
-                    .setPositiveButton("OK") { _, _ ->
-                        // Request the permission
-                        ActivityCompat.requestPermissions(
-                            this,
-                            arrayOf(
-                                Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION
-                            ),
-                            1
-                        )
-                    }
-                    .setNegativeButton("Cancel") { _, _ ->
-                        // Close the app
-                        finish()
-                    }
-                    // Prevent dialog from being dismissed by clicking outside
-                    .setCancelable(false)
-                    .create()
-                    .show()
-            }
-        } else {
-            // To get the current location
-            fusedLocationClient.getCurrentLocation(
-                Priority.PRIORITY_HIGH_ACCURACY,
-                CancellationTokenSource().token
-            )
-                .addOnSuccessListener { location: Location? ->
-                    // Get location. In some rare situations this can be null.
-                    if (location != null) {
-                        Toast.makeText(
-                            this,
-                            "Location: lat = ${location.latitude} lon = ${location.longitude}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(this, "Cannot get location", Toast.LENGTH_LONG).show()
-                }
-        }
-    }
 }
 
 @Composable
-fun WeatherApp() {
+fun WeatherApp(context : Context) {
     ForecastApplicationTheme {
         // A surface container using the 'background' color from the theme
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.primary
         ) {
-            WeatherNavigation()
+            WeatherNavigation(context = context)
         }
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    WeatherApp()
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview(context: Context) {
+//    WeatherApp(context = context)
+//}
