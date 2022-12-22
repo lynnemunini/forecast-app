@@ -1,6 +1,6 @@
 package com.grayseal.forecastapp.model
 
-data class WeatherObject(
+data class WeatherX(
     val description: String,
     val icon: String,
     val id: Int,
