@@ -44,14 +44,20 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            ShowData(mainViewModel = mainViewModel, latitude = latitude, longitude = longitude)
+            ShowData(
+                mainViewModel = mainViewModel,
+                latitude = latitude,
+                longitude = longitude,
+                context = context
+            )
         }
     }
 }
 
 @Composable
-fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) {
+fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double, context: Context) {
     if (latitude != 360.0 && longitude != 360.0) {
+        // Latitude and longitude are valid, so continue as normal
         val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
             initialValue = DataOrException(loading = true)
         ) {
@@ -66,7 +72,19 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
             Text(text = weatherData.data!!.current.weather[0].description, color = Color.White)
         }
     } else {
-        CircularProgressIndicator()
-        Text("Oops looks like you have denied Location permissions", color = Color.White, fontSize = 30.sp)
+        // Latitude and longitude are not valid, so check if the app has permission to access the device's location
+        if (!mainViewModel.hasLocationPermission(context = context)) {
+            // App does not have permission to access location, so show the error message
+            CircularProgressIndicator()
+            Text(
+                "Oops looks like you have denied Location permissions",
+                color = Color.White,
+                fontSize = 30.sp
+            )
+        } else {
+            // App has permission to access location, so there must be some other issue
+            CircularProgressIndicator()
+            Text("Error fetching weather data", color = Color.White, fontSize = 30.sp)
+        }
     }
 }

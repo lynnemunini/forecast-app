@@ -1,8 +1,10 @@
 package com.grayseal.forecastapp.screens.main
 
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.content.Context
-import androidx.compose.runtime.MutableState
+import android.content.pm.PackageManager
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.location.getCurrentLocation
@@ -37,4 +39,12 @@ class MainViewModel @Inject constructor(private val repository: WeatherRepositor
         }
         return longitude.value
     }
+
+    fun hasLocationPermission(context: Context): Boolean {
+        return ContextCompat.checkSelfPermission(
+            context,
+            ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
 }

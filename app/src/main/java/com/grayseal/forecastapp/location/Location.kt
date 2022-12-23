@@ -50,22 +50,13 @@ fun getCurrentLocation(context: Context, callback: (Location) -> Unit) {
 
 // Function to request the location permissions
 private fun requestLocationPermissions(context: Context) {
-    if (ActivityCompat.shouldShowRequestPermissionRationale(
+    /*ActivityCompat.shouldShowRequestPermissionRationale(
             context as Activity,
-            ACCESS_FINE_LOCATION
-        )
-    ) {
-        // Show a message to the user explaining why the permission is needed
-        Toast.makeText(
-            context,
-            "We only request access to your location in order to provide you with the best possible weather experience.\n\n" +
-                    "Without this permission you will have to manually enter your location.",
-            Toast.LENGTH_LONG
-        ).show()
-    }
+            ACCESS_FINE_LOCATION*
+        )*/
     // Request the permission
     ActivityCompat.requestPermissions(
-        context,
+        context as Activity,
         arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION),
         1
     )
