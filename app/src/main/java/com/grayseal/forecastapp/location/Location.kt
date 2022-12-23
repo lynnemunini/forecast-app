@@ -24,7 +24,7 @@ fun getCurrentLocation(context: Context, callback: (Location) -> Unit) {
     // Check for the location permissions
     if (ContextCompat.checkSelfPermission(
             context,
-            ACCESS_COARSE_LOCATION
+            ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
     ) {
         // Request the permissions
@@ -52,7 +52,7 @@ fun getCurrentLocation(context: Context, callback: (Location) -> Unit) {
 private fun requestLocationPermissions(context: Context) {
     if (ActivityCompat.shouldShowRequestPermissionRationale(
             context as Activity,
-            ACCESS_COARSE_LOCATION
+            ACCESS_FINE_LOCATION
         )
     ) {
         // Show a message to the user explaining why the permission is needed

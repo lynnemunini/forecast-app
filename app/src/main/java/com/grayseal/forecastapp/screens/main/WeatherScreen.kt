@@ -20,20 +20,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.data.DataOrException
-import com.grayseal.forecastapp.location.getCurrentLocation
 import com.grayseal.forecastapp.model.Weather
 
 @Composable
 fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, context: Context) {
-    var latitude: Double = 0.0
-    var longitude: Double = 0.0
-
+    val latitude = mainViewModel.getCurrentLatitude(context = context)
+    val longitude = mainViewModel.getCurrentLongitude(context = context)
 
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
-    getCurrentLocation(context = context) { location ->
-        latitude = location.latitude
-        longitude = location.longitude
-    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -57,7 +51,7 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
 
 @Composable
 fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) {
-    if(latitude != 0.0 && longitude != 0.0) {
+    if (latitude != 360.0 && longitude != 360.0) {
         val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
             initialValue = DataOrException(loading = true)
         ) {
@@ -71,9 +65,8 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
         } else if (weatherData.data != null) {
             Text(text = weatherData.data!!.current.weather[0].description, color = Color.White)
         }
-    }
-    else{
+    } else {
         CircularProgressIndicator()
-        Text("Latitude and Longitude is 0.0", color = Color.White, fontSize = 30.sp)
+        Text("Oops looks like you have denied Location permissions", color = Color.White, fontSize = 30.sp)
     }
 }
