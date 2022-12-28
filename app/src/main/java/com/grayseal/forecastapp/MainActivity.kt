@@ -9,6 +9,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import com.grayseal.forecastapp.navigation.WeatherNavigation
 import com.grayseal.forecastapp.ui.theme.ForecastApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,8 +41,8 @@ fun WeatherApp(context: Context) {
 }
 
 
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview(context: Context) {
-//    WeatherApp(context = context)
-//}
+/* @Preview(showBackground = true)
+@Composable
+fun DefaultPreview(context: Context, @PreviewParameter(name = "Text") text: String) {
+    WeatherApp(context = context)
+} */

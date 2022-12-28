@@ -93,7 +93,8 @@ fun showPermissionDeniedDialog(context: Context) {
         val intent = Intent(
             Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
             /*to create a Uri object from a string that specifies the package name of an app*/
-            Uri.parse("package:com.grayseal.forecastapp"))
+            Uri.parse("package:com.grayseal.forecastapp")
+        )
         Log.d("Intent", intent.toString())
         context.startActivity(intent)
     }

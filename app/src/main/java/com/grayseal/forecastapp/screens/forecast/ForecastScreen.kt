@@ -5,6 +5,6 @@ import androidx.navigation.NavController
 import com.grayseal.forecastapp.screens.main.MainViewModel
 
 @Composable
-fun ForecastScreen(navController: NavController, mainViewModel: MainViewModel){
+fun ForecastScreen(navController: NavController, mainViewModel: MainViewModel) {
 
 }
