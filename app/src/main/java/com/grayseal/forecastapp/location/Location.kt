@@ -36,8 +36,11 @@ fun getCurrentLocation(context: Context, callback: (Location) -> Unit) {
             ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_DENIED
     ) {
+        requestLocationPermissions(context)
+
         // Check if the user has clicked "Deny" after requesting permissions and show the permissions rationale only in that case
-        if (ActivityCompat.shouldShowRequestPermissionRationale(
+
+        /* if (ActivityCompat.shouldShowRequestPermissionRationale(
                 context as Activity,
                 ACCESS_COARSE_LOCATION
             ) ||
@@ -50,8 +53,9 @@ fun getCurrentLocation(context: Context, callback: (Location) -> Unit) {
             // The user has either granted the permission or denied the permission without selecting the "Never ask again" option
             // Request the permissions
             requestLocationPermissions(context)
-        }
+        } */
     }
+
     // Get the current location
     try {
         val locationResult = fusedLocationClient.getCurrentLocation(
