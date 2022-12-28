@@ -1,6 +1,12 @@
 package com.grayseal.forecastapp.screens.main
 
+import android.Manifest
+import android.provider.Settings
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.location.requestLocationPermissions
@@ -66,6 +73,7 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double, 
             value = mainViewModel.getWeatherData(latitude, longitude)
         }.value
 
+
         if (weatherData.loading == true) {
             CircularProgressIndicator()
             Text("Fetching Weather data")
@@ -74,13 +82,23 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double, 
         }
     } else {
         // Latitude and longitude are not valid, so check if the app has permission to access the device's location
-        if (!mainViewModel.hasLocationPermission(context = context)) {
-            // App does not have permission to access location, so request permissions
-            requestLocationPermissions(context)
-        } else {
-            // App has permission to access location, so there must be some other issue
-            CircularProgressIndicator()
-            Text("Error fetching weather data", color = Color.White, fontSize = 30.sp)
-        }
+        CircularProgressIndicator()
     }
+}
+
+fun showPermissionDeniedDialog(context: Context) {
+    val builder = AlertDialog.Builder(context)
+    builder.setTitle("Permission Denied")
+    builder.setMessage("This app needs access to your location to function properly. Please grant the location permission in the app settings.")
+    builder.setPositiveButton("Go to Settings") { _, _ ->
+        // Open the app settings
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            /*to create a Uri object from a string that specifies the package name of an app*/
+            Uri.parse("package:$context.packageName"))
+        context.startActivity(intent)
+    }
+    builder.setNegativeButton("Cancel") { _, _ ->
+        // Do nothing
+    }
+    builder.create().show()
 }
