@@ -49,12 +49,7 @@ fun getCurrentLocation(context: Context, callback: (Location) -> Unit) {
 }
 
 // Function to request the location permissions
-private fun requestLocationPermissions(context: Context) {
-    /*ActivityCompat.shouldShowRequestPermissionRationale(
-            context as Activity,
-            ACCESS_FINE_LOCATION*
-        )*/
-    // Request the permission
+fun requestLocationPermissions(context: Context) {
     ActivityCompat.requestPermissions(
         context as Activity,
         arrayOf(ACCESS_COARSE_LOCATION, ACCESS_FINE_LOCATION),

@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.data.DataOrException
+import com.grayseal.forecastapp.location.requestLocationPermissions
 import com.grayseal.forecastapp.model.Weather
 
 @Composable
@@ -74,13 +75,8 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double, 
     } else {
         // Latitude and longitude are not valid, so check if the app has permission to access the device's location
         if (!mainViewModel.hasLocationPermission(context = context)) {
-            // App does not have permission to access location, so show the error message
-            CircularProgressIndicator()
-            Text(
-                "Oops looks like you have denied Location permissions",
-                color = Color.White,
-                fontSize = 30.sp
-            )
+            // App does not have permission to access location, so request permissions
+            requestLocationPermissions(context)
         } else {
             // App has permission to access location, so there must be some other issue
             CircularProgressIndicator()
