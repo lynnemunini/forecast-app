@@ -1,13 +1,6 @@
 package com.grayseal.forecastapp.screens.main
 
-import android.Manifest
-import android.app.Activity
-import android.provider.Settings
-import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,12 +18,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.data.DataOrException
-import com.grayseal.forecastapp.location.requestLocationPermissions
-import com.grayseal.forecastapp.location.showPermissionDeniedDialog
 import com.grayseal.forecastapp.model.Weather
 
 @Composable
