@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            WeatherApp(context = this)
+            WeatherApp(this)
         }
     }
 }
@@ -33,7 +33,7 @@ fun WeatherApp(context: Context) {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.primary
         ) {
-            WeatherNavigation(context = context)
+            WeatherNavigation(context)
         }
     }
 }

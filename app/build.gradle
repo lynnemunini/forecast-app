@@ -108,6 +108,8 @@ dependencies {
     // Google play's location library
     implementation 'com.google.android.gms:play-services-location:21.0.1'
 
+    // provides Android runtime permissions support for Jetpack Compose
+    implementation "com.google.accompanist:accompanist-permissions:0.28.0"
 }
 
 // Allow references to generated code

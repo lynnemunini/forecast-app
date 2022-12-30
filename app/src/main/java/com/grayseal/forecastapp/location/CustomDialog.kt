@@ -5,10 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
@@ -27,9 +24,10 @@ fun CustomDialog(
     title: String? = "Message",
     desc: String? = "Your Message",
     enableLocation: MutableState<Boolean>,
+    onClick: () -> Unit,
 ) {
     Dialog(
-        onDismissRequest = { enableLocation.value = true }
+        onDismissRequest = { enableLocation.value = false }
     ) {
         Box(
             modifier = Modifier
@@ -84,9 +82,7 @@ fun CustomDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 32.dp, end = 32.dp),
-                    onClick = {
-                        enableLocation.value = true
-                    },
+                    onClick = onClick,
                     contentPadding = PaddingValues(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent
@@ -111,6 +107,13 @@ fun CustomDialog(
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(12.dp))
+                TextButton(onClick = {
+                    enableLocation.value = false
+                    android.os.Process.killProcess(android.os.Process.myPid())
+                }) { Text("Cancel", style = MaterialTheme.typography.labelLarge, color = Color(0xFF23224a)) }
+                Spacer(modifier = Modifier.height(24.dp))
+
 
             }
         }
