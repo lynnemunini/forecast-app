@@ -117,7 +117,11 @@ fun Content(showButton: Boolean = true, onClick: () -> Unit) {
         if (enableLocation.value) {
             CustomDialog(
                 title = "Turn On Location Service",
-                desc = "Explore the world without getting lost and keep the track of your location.\n\nGive this app a permission to proceed. If it doesn't work, then you'll have to do it manually from the settings.",
+                desc = "We understand that privacy is important and we only request access to " +
+                        "your location for the purpose of providing you with accurate and relevant " +
+                        "weather information.\n\n" +
+                        "Unfortunately, without this permission you will not be able to utilize " +
+                        "the app's functionalities.",
                 enableLocation,
                 onClick
             )
