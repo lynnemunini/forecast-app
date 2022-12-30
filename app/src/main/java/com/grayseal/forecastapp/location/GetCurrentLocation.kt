@@ -4,17 +4,17 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -139,7 +139,7 @@ fun PermissionDeniedContent(
             onDismissRequest = {},
             title = {
                 Text(
-                    text = "Permission Request",
+                    text = "Location Permission Request",
                     textAlign = TextAlign.Center,
                     style = androidx.compose.material3.MaterialTheme.typography.titleLarge,
                     color = Color(0xFF23224a),
@@ -147,19 +147,35 @@ fun PermissionDeniedContent(
                 )
             },
             text = {
-                Text(rationaleMessage,
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .fillMaxWidth(),
-                letterSpacing = 0.5.sp,
-                style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
-                color = Color(0xFF23224a), textAlign = TextAlign.Justify)
+                Text(
+                    rationaleMessage,
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .fillMaxWidth(),
+                    letterSpacing = 0.5.sp,
+                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
+                    color = Color(0xFF23224a), textAlign = TextAlign.Justify
+                )
             },
             confirmButton = {
-                Button(onClick = onRequestPermission) {
-                    Text("Give Permission")
+                androidx.compose.material3.Button(
+                    onClick = onRequestPermission,
+                    modifier = Modifier
+                        .padding(bottom = 10.dp)
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color(0xFF0b123a),
+                                    Color(0xFF2596be)
+                                )
+                            ),
+                            shape = RoundedCornerShape(16.dp)
+                        ),
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                ) {
+                    Text("Give Permission", color = Color.White)
                 }
-            }
+            },
         )
 
     } else {
@@ -181,8 +197,8 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
 
 
         if (weatherData.loading == true) {
-            CircularProgressIndicator()
-            androidx.compose.material3.Text("Fetching Weather data")
+            CircularProgressIndicator(color = Color(0xFFd68118))
+            androidx.compose.material3.Text("Loading weather information", color = Color.White)
         } else if (weatherData.data != null) {
             androidx.compose.material3.Text(
                 text = weatherData.data!!.current.weather[0].description,
@@ -191,6 +207,7 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
         }
     } else {
         // Latitude and longitude are not valid, show empty mainScreen
-        androidx.compose.material3.Text("Main Screen", color = Color.White, fontSize = 18.sp)
+        CircularProgressIndicator(color = Color(0xFFd68118))
+        androidx.compose.material3.Text("Retrieving your location", color = Color.White)
     }
 }

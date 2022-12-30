@@ -27,7 +27,7 @@ fun CustomDialog(
     onClick: () -> Unit,
 ) {
     Dialog(
-        onDismissRequest = { enableLocation.value = false }
+        onDismissRequest = {}
     ) {
         Box(
             modifier = Modifier
@@ -111,7 +111,13 @@ fun CustomDialog(
                 TextButton(onClick = {
                     enableLocation.value = false
                     android.os.Process.killProcess(android.os.Process.myPid())
-                }) { Text("Cancel", style = MaterialTheme.typography.labelLarge, color = Color(0xFF23224a)) }
+                }) {
+                    Text(
+                        "Cancel",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color(0xFF23224a)
+                    )
+                }
                 Spacer(modifier = Modifier.height(24.dp))
 
 

@@ -1,4 +1,4 @@
-package com.grayseal.forecastapp.screens
+package com.grayseal.forecastapp.screens.splash
 
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.tween
@@ -16,11 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.navigation.WeatherScreens
-import com.grayseal.forecastapp.screens.main.MainViewModel
 import kotlinx.coroutines.delay
 
 
@@ -38,10 +36,11 @@ fun SplashScreen(navController: NavController) {
     })
 
     Surface() {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(colors.primary)
-            .scale(scale.value),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(colors.primary)
+                .scale(scale.value),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

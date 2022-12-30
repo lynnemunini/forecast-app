@@ -1,4 +1,4 @@
-package com.grayseal.forecastapp.screens
+package com.grayseal.forecastapp.screens.location
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

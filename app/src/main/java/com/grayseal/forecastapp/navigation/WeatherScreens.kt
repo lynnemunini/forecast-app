@@ -8,7 +8,7 @@ enum class WeatherScreens {
     SettingScreen;
 
     companion object {
-        fun fromRoute(route: String?): WeatherScreens = when (route?.substringBefore("/")){
+        fun fromRoute(route: String?): WeatherScreens = when (route?.substringBefore("/")) {
             SplashScreen.name -> SplashScreen
             WeatherScreen.name -> WeatherScreen
             ForecastScreen.name -> ForecastScreen
