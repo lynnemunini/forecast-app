@@ -5,6 +5,7 @@ import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,14 +16,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -207,10 +215,20 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
         if (weatherData.loading == true) {
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
                 CircularProgressIndicator(color = Color(0xFFd68118))
+                Spacer(modifier = Modifier.height(10.dp))
                 androidx.compose.material3.Text("Loading weather information", color = Color.White)
             }
         } else if (weatherData.data != null) {
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                val image = weatherData.data!!.current.weather[0].icon
+                val scalingFactor = 5.0f // Increase the size of the image by a factor of 2
+                Image(painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(data = "https://openweathermap.org/img/wn/04d@2x.png").apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
+                ),
+                    contentDescription = "Icon", modifier = Modifier.scale(scalingFactor))
                 androidx.compose.material3.Text(
                     text = weatherData.data!!.current.weather[0].description,
                     color = Color.White
@@ -221,6 +239,7 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
         // Latitude and longitude are not valid, show empty mainScreen
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator(color = Color(0xFFd68118))
+            Spacer(modifier = Modifier.height(10.dp))
             androidx.compose.material3.Text("Retrieving your location", color = Color.White)
         }
     }
