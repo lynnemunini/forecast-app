@@ -78,7 +78,7 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
                 .fillMaxSize()
                 .padding(20.dp),
         ) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
                 Text(name, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
             }
             MainScreen()

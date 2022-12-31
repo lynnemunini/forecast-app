@@ -14,6 +14,7 @@ interface WeatherApi {
     suspend fun getWeather(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
+        @Query("units") units: String = "metric",
         @Query("exclude") exclude: String = "minutely,hourly",
         @Query("appid") appid: String = Constants.API_KEY
     ): Weather

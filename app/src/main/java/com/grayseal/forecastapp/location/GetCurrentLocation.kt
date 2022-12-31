@@ -15,6 +15,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -216,12 +217,14 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
             }
         } else if (weatherData.data != null) {
             Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val icon = weatherData.data!!.current.weather[0].icon
                 var image = R.drawable.sun_cloudy
+                val scalingFactor = 1.4f
                 if (icon == "01d") {
                     image = R.drawable.sunny
                 } else if (icon == "02d") {
@@ -243,12 +246,58 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 } else {
                     R.drawable.cloudy
                 }
-                Image(painter = painterResource(id = image), contentDescription = "WeatherIcon")
-                androidx.compose.material3.Text(
-                    text = weatherData.data!!.current.weather[0].description,
-                    color = Color.White
-                )
+                Image(painter = painterResource(id = image), contentDescription = "WeatherIcon", modifier = Modifier.scale(scalingFactor))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp, bottom = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Column() {
+                        Row() {
+                            Text("Temp", fontSize = 14.sp)
+                        }
+                        Row() {
+                            Text(
+                                weatherData.data!!.current.temp.toString() + "°",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+                        }
+
+                    }
+                    Column() {
+                        Row() {
+                            Text("Wind", fontSize = 14.sp)
+
+                        }
+                        Row() {
+                            Text(
+                                weatherData.data!!.current.wind_speed.toString() + "m/s",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+
+                        }
+
+                    }
+                    Column() {
+                        Row() {
+                            Text("Humidity", fontSize = 14.sp)
+                        }
+                        Row() {
+                            Text(
+                                weatherData.data!!.current.humidity.toString() + "%",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp
+                            )
+
+                        }
+
+                    }
+                }
             }
+
         }
     } else {
         // Latitude and longitude are not valid, show empty mainScreen
