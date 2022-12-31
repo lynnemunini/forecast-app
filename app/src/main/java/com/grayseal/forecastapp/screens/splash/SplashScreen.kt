@@ -45,7 +45,7 @@ fun SplashScreen(navController: NavController) {
             verticalArrangement = Arrangement.Center
         ) {
             Image(
-                painter = painterResource(id = R.drawable.sunny_cloudy),
+                painter = painterResource(id = R.drawable.sunny),
                 contentDescription = "Splash Weather"
             )
         }

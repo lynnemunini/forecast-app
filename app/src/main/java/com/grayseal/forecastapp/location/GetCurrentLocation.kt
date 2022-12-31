@@ -12,35 +12,27 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import coil.compose.AsyncImage
-import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.location.CustomDialog
 import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.screens.main.MainViewModel
-import com.grayseal.forecastapp.utils.getCurrentDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -213,22 +205,45 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
 
 
         if (weatherData.loading == true) {
-            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 CircularProgressIndicator(color = Color(0xFFd68118))
                 Spacer(modifier = Modifier.height(10.dp))
                 androidx.compose.material3.Text("Loading weather information", color = Color.White)
             }
         } else if (weatherData.data != null) {
-            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                val image = weatherData.data!!.current.weather[0].icon
-                val scalingFactor = 5.0f // Increase the size of the image by a factor of 2
-                Image(painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current)
-                        .data(data = "https://openweathermap.org/img/wn/04d@2x.png").apply(block = fun ImageRequest.Builder.() {
-                            crossfade(true)
-                        }).build()
-                ),
-                    contentDescription = "Icon", modifier = Modifier.scale(scalingFactor))
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                val icon = weatherData.data!!.current.weather[0].icon
+                var image = R.drawable.sun_cloudy
+                if (icon == "01d") {
+                    image = R.drawable.sunny
+                } else if (icon == "02d") {
+                    image = R.drawable.sunny
+                } else if (icon == "03d" || icon == "04d" || icon == "04n" || icon == "03n" || icon == "02n") {
+                    image = R.drawable.cloudy
+                } else if (icon == "09d" || icon == "10n" || icon == "09n") {
+                    image = R.drawable.rainy
+                } else if (icon == "10d") {
+                    image = R.drawable.rainy_sunny
+                } else if (icon == "11d" || icon == "11n") {
+                    image = R.drawable.thunder_lightning
+                } else if (icon == "13d" || icon == "13n") {
+                    image = R.drawable.snow
+                } else if (icon == "50d" || icon == "50n") {
+                    image = R.drawable.cloudy
+                } else if (icon == "01n") {
+                    image = R.drawable.clear
+                } else {
+                    R.drawable.cloudy
+                }
+                Image(painter = painterResource(id = image), contentDescription = "WeatherIcon")
                 androidx.compose.material3.Text(
                     text = weatherData.data!!.current.weather[0].description,
                     color = Color.White
@@ -237,7 +252,11 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
         }
     } else {
         // Latitude and longitude are not valid, show empty mainScreen
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             CircularProgressIndicator(color = Color(0xFFd68118))
             Spacer(modifier = Modifier.height(10.dp))
             androidx.compose.material3.Text("Retrieving your location", color = Color.White)
@@ -245,7 +264,11 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
     }
 }
 
-suspend fun getLocationName(context: Context, latitude: MutableState<Double>, longitude: MutableState<Double>): String {
+suspend fun getLocationName(
+    context: Context,
+    latitude: MutableState<Double>,
+    longitude: MutableState<Double>
+): String {
     // To specify that the geocoding operation should be performed on the IO dispatcher
     return withContext(Dispatchers.IO) {
         /*
