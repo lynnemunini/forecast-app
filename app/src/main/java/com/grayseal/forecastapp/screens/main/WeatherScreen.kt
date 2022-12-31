@@ -7,8 +7,12 @@ import android.location.Geocoder
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -51,6 +55,12 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
             }
         }
     }
+    val commaIndex = locationName.indexOf(",")
+    val name = if (commaIndex >= 0) {
+        locationName.substring(0, commaIndex)
+    } else {
+        locationName
+    }
 
     Box(
         modifier = Modifier
@@ -69,7 +79,7 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
                 .padding(20.dp),
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                Text(locationName, style = MaterialTheme.typography.bodySmall)
+                Text(name, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
             }
             MainScreen()
             GetCurrentLocation(
@@ -85,12 +95,19 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
 @Preview(showBackground = true)
 @Composable
 fun MainScreen() {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+    Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
         Text(getCurrentDate(), style = MaterialTheme.typography.bodySmall)
     }
     Spacer(modifier = Modifier.height(30.dp))
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Text("Today's Report", fontSize = 22.sp, fontWeight = FontWeight.Bold, color = Color.White)
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        ElevatedButton(onClick = { /*TODO*/ }, shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.elevatedButtonColors(containerColor = colors.secondary, contentColor = Color.White), elevation = ButtonDefaults.buttonElevation(6.dp)) {
+            Text("Forecast")
+
+        }
+        ElevatedButton(onClick = { /*TODO*/ }, shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.elevatedButtonColors(containerColor = colors.primaryVariant, contentColor = Color.White), elevation = ButtonDefaults.buttonElevation(6.dp)) {
+            Text("Air Quality")
+
+        }
     }
 }
 
