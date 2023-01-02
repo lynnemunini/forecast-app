@@ -226,12 +226,11 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(20.dp),
+                    .padding(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val icon = weatherData.data!!.current.weather[0].icon
                 var image = R.drawable.sun_cloudy
-                val scalingFactor = 1.4f
                 if (icon == "01d") {
                     image = R.drawable.sunny
                 } else if (icon == "02d") {
@@ -253,11 +252,13 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 } else {
                     R.drawable.cloudy
                 }
-                Image(painter = painterResource(id = image), contentDescription = "WeatherIcon", modifier = Modifier.scale(scalingFactor))
-                Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
+                Image(painter = painterResource(id = image), contentDescription = "WeatherIcon", modifier = Modifier.scale(
+                    1F
+                ))
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     Text(weatherData.data!!.current.weather[0].description.split(' ').joinToString(separator = " ") { word -> word.replaceFirstChar { it.uppercase() } }, fontSize = 22.sp, fontWeight = FontWeight.Bold)
                 }
-                Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     Text(
                         buildAnnotatedString {
                             withStyle(
@@ -283,50 +284,44 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 20.dp, bottom = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceAround
+                        .padding(20.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column() {
-                        Row() {
-                            Text("Pressure", fontSize = 14.sp)
-                        }
-                        Row() {
-                            Text(
-                                weatherData.data!!.current.pressure.toString() + "hPa",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp
-                            )
-                        }
+                            Image(painter = painterResource(id = R.drawable.wind), contentDescription = "PressureIcon", modifier = Modifier.scale(
+                                0.1F
+                            ))
+                        Text("Pressure", fontSize = 14.sp)
+                        Text(
+                            weatherData.data!!.current.pressure.toString() + "hPa",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
 
                     }
                     Column() {
-                        Row() {
-                            Text("Wind", fontSize = 14.sp)
 
-                        }
-                        Row() {
-                            Text(
-                                weatherData.data!!.current.wind_speed.toInt().toString() + "m/s",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp
-                            )
-
-                        }
+                            Image(painter = painterResource(id = R.drawable.wind), contentDescription = "PressureIcon", modifier = Modifier.scale(
+                                0.2F
+                            ))
+                        Text("Wind", fontSize = 14.sp)
+                        Text(
+                            weatherData.data!!.current.wind_speed.toInt().toString() + "m/s",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
 
                     }
                     Column() {
-                        Row() {
-                            Text("Humidity", fontSize = 14.sp)
-                        }
-                        Row() {
-                            Text(
-                                weatherData.data!!.current.humidity.toString() + "%",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp
-                            )
-
-                        }
-
+//                            Image(painter = painterResource(id = R.drawable.wind), contentDescription = "PressureIcon", modifier = Modifier.scale(
+//                                0.2F
+//                            ))
+                        Text("Humidity", fontSize = 14.sp)
+                        Text(
+                            weatherData.data!!.current.humidity.toString() + "%",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
                     }
                 }
             }
