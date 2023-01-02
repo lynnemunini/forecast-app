@@ -3,6 +3,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.location.Location
+import android.text.TextUtils.split
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
@@ -10,8 +11,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,8 +22,11 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -34,6 +40,7 @@ import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.location.CustomDialog
 import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.screens.main.MainViewModel
+import com.grayseal.forecastapp.utils.getCurrentDate
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -240,26 +247,52 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 } else if (icon == "13d" || icon == "13n") {
                     image = R.drawable.snow
                 } else if (icon == "50d" || icon == "50n") {
-                    image = R.drawable.cloudy
+                    image = R.drawable.fog
                 } else if (icon == "01n") {
                     image = R.drawable.clear
                 } else {
                     R.drawable.cloudy
                 }
                 Image(painter = painterResource(id = image), contentDescription = "WeatherIcon", modifier = Modifier.scale(scalingFactor))
+                Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
+                    Text(weatherData.data!!.current.weather[0].description.split(' ').joinToString(separator = " ") { word -> word.replaceFirstChar { it.uppercase() } }, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                }
+                Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
+                    Text(
+                        buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = colors.onPrimary,
+                                    fontSize = 40.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append(weatherData.data!!.current.temp.toInt().toString())
+                            }
+                            withStyle(
+                                style = SpanStyle(
+                                    color = colors.secondary,
+                                    fontSize = 40.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            ) {
+                                append("°")
+                            }
+                        })
+                }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 20.dp, bottom = 20.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     Column() {
                         Row() {
-                            Text("Temp", fontSize = 14.sp)
+                            Text("Pressure", fontSize = 14.sp)
                         }
                         Row() {
                             Text(
-                                weatherData.data!!.current.temp.toString() + "°",
+                                weatherData.data!!.current.pressure.toString() + "hPa",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp
                             )
@@ -273,7 +306,7 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                         }
                         Row() {
                             Text(
-                                weatherData.data!!.current.wind_speed.toString() + "m/s",
+                                weatherData.data!!.current.wind_speed.toInt().toString() + "m/s",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp
                             )
