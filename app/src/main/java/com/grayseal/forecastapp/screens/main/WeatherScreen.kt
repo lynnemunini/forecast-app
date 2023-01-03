@@ -30,28 +30,32 @@ import java.util.*
 @Composable
 fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, context: Context) {
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
-    Scaffold(content = { padding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .background(
-                    brush = Brush.linearGradient(
-                        colors = gradientColors,
-                        start = Offset(0f, Float.POSITIVE_INFINITY),
-                        end = Offset(Float.POSITIVE_INFINITY, 0f)
-                    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.linearGradient(
+                    colors = gradientColors,
+                    start = Offset(0f, Float.POSITIVE_INFINITY),
+                    end = Offset(Float.POSITIVE_INFINITY, 0f)
                 )
-        ) {
-            HomeElements(
-                navController = navController,
-                mainViewModel = mainViewModel,
-                context = context
             )
-        }
-    }, bottomBar = {
-        NavBar()
-    })
+    ) {
+        Scaffold(content = { padding ->
+            Column(
+                modifier = Modifier
+                    .padding(padding),
+            ) {
+                HomeElements(
+                    navController = navController,
+                    mainViewModel = mainViewModel,
+                    context = context
+                )
+            }
+        }, bottomBar = {
+            NavBar()
+        }, containerColor = Color.Transparent)
+    }
 
 }
 
@@ -83,63 +87,58 @@ fun HomeElements(navController: NavController, mainViewModel: MainViewModel, con
         locationName
     }
 
-    Column(
+    Row(
         modifier = Modifier
-            .padding(top = 10.dp),
+            .fillMaxWidth()
+            .padding(top = 10.dp), horizontalArrangement = Arrangement.Center
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp), horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                name,
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
-        }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp), horizontalArrangement = Arrangement.Center
-        ) {
-            Text(getCurrentDate(), style = MaterialTheme.typography.bodySmall)
-        }
-        Spacer(modifier = Modifier.height(10.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            ElevatedButton(
-                onClick = { TODO() },
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.elevatedButtonColors(
-                    containerColor = colors.secondary,
-                    contentColor = Color.White
-                ),
-                elevation = ButtonDefaults.buttonElevation(6.dp)
-            ) {
-                Text("Forecast")
-
-            }
-            ElevatedButton(
-                onClick = { TODO() },
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.elevatedButtonColors(
-                    containerColor = colors.primaryVariant,
-                    contentColor = Color.White
-                ),
-                elevation = ButtonDefaults.buttonElevation(6.dp)
-            ) {
-                Text("Air Quality")
-
-            }
-        }
-        GetCurrentLocation(
-            mainViewModel = mainViewModel,
-            context = context,
-            latitude = latitude,
-            longitude = longitude
+        Text(
+            name,
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold
         )
-        NavBar()
     }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 10.dp), horizontalArrangement = Arrangement.Center
+    ) {
+        Text(getCurrentDate(), style = MaterialTheme.typography.bodySmall)
+    }
+    Spacer(modifier = Modifier.height(10.dp))
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+        ElevatedButton(
+            onClick = { /*TODO("Not yet Implemented")*/ },
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.elevatedButtonColors(
+                containerColor = colors.secondary,
+                contentColor = Color.White
+            ),
+            elevation = ButtonDefaults.buttonElevation(6.dp)
+        ) {
+            Text("Forecast")
+
+        }
+        ElevatedButton(
+            onClick = { /*TODO("Not yet Implemented")*/ },
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.elevatedButtonColors(
+                containerColor = colors.primaryVariant,
+                contentColor = Color.White
+            ),
+            elevation = ButtonDefaults.buttonElevation(6.dp)
+        ) {
+            Text("Air Quality")
+
+        }
+    }
+    GetCurrentLocation(
+        mainViewModel = mainViewModel,
+        context = context,
+        latitude = latitude,
+        longitude = longitude
+    )
+    NavBar()
 }
 
 suspend fun getLocationName(

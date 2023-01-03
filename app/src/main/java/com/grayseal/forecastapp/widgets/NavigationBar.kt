@@ -1,15 +1,13 @@
 package com.grayseal.forecastapp.widgets
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,14 +25,14 @@ fun NavBar() {
     NavigationBar(
         modifier = Modifier.fillMaxWidth(),
         containerColor = Color.Transparent,
-        contentColor = Color.White,
+        contentColor = Color.Transparent
     ) {
         keys.forEachIndexed { index, key ->
             NavigationBarItem(
                 icon = { items[key]?.let { Icon(it, contentDescription = key) } },
-                label = { Text(key) },
                 selected = selectedItem == index,
-                onClick = { selectedItem = index }
+                onClick = { selectedItem = index },
+                colors = NavigationBarItemDefaults.colors(selectedIconColor = colors.secondary, unselectedIconColor = Color.White, indicatorColor = Color.Transparent)
             )
         }
     }
