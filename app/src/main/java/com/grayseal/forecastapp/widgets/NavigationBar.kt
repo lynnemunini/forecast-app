@@ -3,6 +3,7 @@ package com.grayseal.forecastapp.widgets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
@@ -15,6 +16,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -34,7 +36,7 @@ fun NavBar() {
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(15.dp)
+            .padding(top = 15.dp, bottom = 15.dp, start = 15.dp, end = 15.dp)
             .clip(
                 RoundedCornerShape(15.dp, 15.dp, 15.dp, 15.dp)
             ),
@@ -51,8 +53,7 @@ fun NavBar() {
                     indicatorColor = colors.primaryVariant
                 ),
                 modifier = Modifier
-                    .size(50.dp)
-                    .padding(0.dp)
+                    .size(50.dp).wrapContentSize(align = Alignment.Center), // wrap contents to the size of the largest item and center them
             )
         }
     }
