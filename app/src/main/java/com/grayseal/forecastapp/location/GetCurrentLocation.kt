@@ -1,6 +1,7 @@
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.util.Log
@@ -222,8 +223,7 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
         } else if (weatherData.data != null) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(10.dp),
+                    .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 val icon = weatherData.data!!.current.weather[0].icon
@@ -295,8 +295,7 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 }
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp),
+                        .fillMaxWidth().padding(start = 10.dp, end = 10.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Column(verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -388,7 +387,8 @@ suspend fun getLocationName(
         val addresses = geocoder.getFromLocation(latitude.value, longitude.value, 1)
         var locationName = ""
         if (addresses != null && addresses.size > 0) {
-            locationName = addresses[0].getAddressLine(0)
+            val address: Address = addresses[0]
+            locationName = address.adminArea
         }
         locationName
     }

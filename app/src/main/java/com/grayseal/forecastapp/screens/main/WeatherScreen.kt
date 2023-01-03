@@ -2,41 +2,62 @@ package com.grayseal.forecastapp.screens.main
 
 import GetCurrentLocation
 import android.content.Context
-import android.location.Address
 import android.location.Geocoder
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.grayseal.forecastapp.utils.getCurrentDate
+import com.grayseal.forecastapp.widgets.NavBar
 import getLocationName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-@OptIn(ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, context: Context) {
-
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
+    Scaffold(content = { padding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+                .background(
+                    brush = Brush.linearGradient(
+                        colors = gradientColors,
+                        start = Offset(0f, Float.POSITIVE_INFINITY),
+                        end = Offset(Float.POSITIVE_INFINITY, 0f)
+                    )
+                )
+        ) {
+            HomeElements(
+                navController = navController,
+                mainViewModel = mainViewModel,
+                context = context
+            )
+        }
+    }, bottomBar = {
+        NavBar()
+    })
+
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun HomeElements(navController: NavController, mainViewModel: MainViewModel, context: Context) {
     val latitude = remember {
         mutableStateOf(360.0)
     }
@@ -62,52 +83,62 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
         locationName
     }
 
-    Box(
+    Column(
         modifier = Modifier
-            .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(
-                    colors = gradientColors,
-                    start = Offset(0f, Float.POSITIVE_INFINITY),
-                    end = Offset(Float.POSITIVE_INFINITY, 0f)
-                )
-            )
+            .padding(top = 10.dp),
     ) {
-        Column(
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 20.dp, bottom = 20.dp),
+                .fillMaxWidth()
+                .padding(top = 10.dp), horizontalArrangement = Arrangement.Center
         ) {
-            Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
-                Text(name, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-            }
-            MainScreen()
-            GetCurrentLocation(
-                mainViewModel = mainViewModel,
-                context = context,
-                latitude = latitude,
-                longitude = longitude
+            Text(
+                name,
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MainScreen() {
-    Row(modifier = Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
-        Text(getCurrentDate(), style = MaterialTheme.typography.bodySmall)
-    }
-    Spacer(modifier = Modifier.height(30.dp))
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        ElevatedButton(onClick = { /*TODO*/ }, shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.elevatedButtonColors(containerColor = colors.secondary, contentColor = Color.White), elevation = ButtonDefaults.buttonElevation(6.dp)) {
-            Text("Forecast")
-
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 10.dp), horizontalArrangement = Arrangement.Center
+        ) {
+            Text(getCurrentDate(), style = MaterialTheme.typography.bodySmall)
         }
-        ElevatedButton(onClick = { /*TODO*/ }, shape = RoundedCornerShape(10.dp), colors = ButtonDefaults.elevatedButtonColors(containerColor = colors.primaryVariant, contentColor = Color.White), elevation = ButtonDefaults.buttonElevation(6.dp)) {
-            Text("Air Quality")
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            ElevatedButton(
+                onClick = { TODO() },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.elevatedButtonColors(
+                    containerColor = colors.secondary,
+                    contentColor = Color.White
+                ),
+                elevation = ButtonDefaults.buttonElevation(6.dp)
+            ) {
+                Text("Forecast")
 
+            }
+            ElevatedButton(
+                onClick = { TODO() },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.elevatedButtonColors(
+                    containerColor = colors.primaryVariant,
+                    contentColor = Color.White
+                ),
+                elevation = ButtonDefaults.buttonElevation(6.dp)
+            ) {
+                Text("Air Quality")
+
+            }
         }
+        GetCurrentLocation(
+            mainViewModel = mainViewModel,
+            context = context,
+            latitude = latitude,
+            longitude = longitude
+        )
+        NavBar()
     }
 }
 
