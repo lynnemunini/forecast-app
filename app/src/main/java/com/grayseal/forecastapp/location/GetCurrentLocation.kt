@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.MaterialTheme.colors
@@ -19,7 +18,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
@@ -222,7 +220,11 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
             ) {
                 CircularProgressIndicator(color = Color(0xFFd68118))
                 Spacer(modifier = Modifier.height(10.dp))
-                androidx.compose.material3.Text("Loading weather information", color = Color.White, fontFamily = poppinsFamily)
+                androidx.compose.material3.Text(
+                    "Loading weather information",
+                    color = Color.White,
+                    fontFamily = poppinsFamily
+                )
             }
         } else if (weatherData.data != null) {
             Column(
@@ -253,14 +255,16 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 } else {
                     R.drawable.cloudy
                 }
-                Box(modifier = Modifier.background(
-                    brush = Brush.radialGradient(
-                        colors = listOf(
-                            colors.secondary,
-                            colors.primary,Color.Transparent,
-                        ), tileMode = TileMode.Clamp
-                    ),alpha = 0.7F
-                )) {
+                Box(
+                    modifier = Modifier.background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                colors.secondary,
+                                colors.primary, Color.Transparent,
+                            ), tileMode = TileMode.Clamp
+                        ), alpha = 0.7F
+                    )
+                ) {
                     Image(
                         painter = painterResource(id = image),
                         contentDescription = "WeatherIcon",
@@ -398,7 +402,11 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
         ) {
             CircularProgressIndicator(color = Color(0xFFd68118))
             Spacer(modifier = Modifier.height(10.dp))
-            androidx.compose.material3.Text("Retrieving your location", color = Color.White, fontFamily = poppinsFamily)
+            androidx.compose.material3.Text(
+                "Retrieving your location",
+                color = Color.White,
+                fontFamily = poppinsFamily
+            )
         }
     }
 }
