@@ -28,9 +28,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
 
-@OptIn(ExperimentalPermissionsApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, context: Context) {
+fun WeatherScreen(
+    mainViewModel: MainViewModel,
+    navController: NavController,
+    context: Context,
+    latitude: MutableState<Double>,
+    longitude: MutableState<Double>,
+) {
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
     Box(
         modifier = Modifier
@@ -49,9 +55,11 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
                     .padding(padding),
             ) {
                 HomeElements(
-                    navController = navController,
                     mainViewModel = mainViewModel,
-                    context = context
+                    navController = navController,
+                    context = context,
+                    latitude = latitude,
+                    longitude = longitude,
                 )
             }
         }, bottomBar = {
@@ -63,14 +71,14 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun HomeElements(navController: NavController, mainViewModel: MainViewModel, context: Context) {
+fun HomeElements(
+    mainViewModel: MainViewModel,
+    navController: NavController,
+    context: Context,
+    latitude: MutableState<Double>,
+    longitude: MutableState<Double>,
+) {
 
-    val latitude = remember {
-        mutableStateOf(360.0)
-    }
-    val longitude = remember {
-        mutableStateOf(360.0)
-    }
     var locationName by remember {
         mutableStateOf("")
     }
@@ -111,6 +119,7 @@ fun HomeElements(navController: NavController, mainViewModel: MainViewModel, con
             fontFamily = poppinsFamily
         )
     }
+
     GetCurrentLocation(
         mainViewModel = mainViewModel,
         context = context,

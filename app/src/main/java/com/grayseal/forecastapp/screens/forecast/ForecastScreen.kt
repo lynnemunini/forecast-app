@@ -1,7 +1,5 @@
 package com.grayseal.forecastapp.screens.forecast
 
-import android.content.Context
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -27,21 +25,17 @@ import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.model.Hourly
 import com.grayseal.forecastapp.model.Weather
-import com.grayseal.forecastapp.screens.main.MainViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.utils.getCurrentDate
 import com.grayseal.forecastapp.widgets.NavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForecastScreen(navController: NavController, mainViewModel: MainViewModel, context: Context) {
+fun ForecastScreen(
+    navController: NavController,
+    weatherData: DataOrException<Weather, Boolean, Exception>
+) {
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
-    val latitude by remember {
-        mutableStateOf(-1.23926)
-    }
-    val longitude by remember {
-        mutableStateOf(-36.890315)
-    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -54,57 +48,29 @@ fun ForecastScreen(navController: NavController, mainViewModel: MainViewModel, c
             )
     ) {
         Scaffold(content = { padding ->
-            Column(
-                modifier = Modifier
-                    .padding(padding),
-            ) {
-                ForecastMainElements()
-                if (latitude != 360.0 && longitude != 360.0) {
-                    // Latitude and longitude are valid, so continue as normal
-                    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
-                        initialValue = DataOrException(loading = true)
-                    ) {
-                        Log.d("Lat $ Lon", "$latitude and $longitude")
-                        value = mainViewModel.getWeatherData(latitude, longitude)
-                    }.value
-
-                    if (weatherData.loading == true) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            CircularProgressIndicator(color = Color(0xFFd68118))
-                            Spacer(modifier = Modifier.height(10.dp))
-                            androidx.compose.material3.Text(
-                                "Loading weather information",
-                                color = Color.White,
-                                fontFamily = poppinsFamily
-                            )
-                        }
-                    } else if (weatherData.data != null) {
-                        ForecastData(
-                            mainViewModel = mainViewModel,
-                            latitude = latitude,
-                            longitude = longitude,
-                            data = weatherData.data!!
-                        )
-                    }
-                } else {
-                    // Latitude and longitude are not valid, show empty forecastScreen
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        CircularProgressIndicator(color = Color(0xFFd68118))
-                        Spacer(modifier = Modifier.height(10.dp))
-                        androidx.compose.material3.Text(
-                            "Retrieving your location",
-                            color = Color.White,
-                            fontFamily = poppinsFamily
-                        )
-                    }
+            if (weatherData.data != null) {
+                Column(
+                    modifier = Modifier
+                        .padding(padding),
+                ) {
+                    ForecastMainElements()
+                    ForecastData(
+                        data = weatherData.data!!
+                    )
+                }
+            } else {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(color = Color(0xFFd68118))
+                    Spacer(modifier = Modifier.height(10.dp))
+                    androidx.compose.material3.Text(
+                        "Loading weather information",
+                        color = Color.White,
+                        fontFamily = poppinsFamily
+                    )
                 }
             }
         }, bottomBar = {
@@ -151,7 +117,7 @@ fun ForecastMainElements() {
 }
 
 @Composable
-fun ForecastData(mainViewModel: MainViewModel, latitude: Double, longitude: Double, data: Weather) {
+fun ForecastData(data: Weather) {
     val icon = data.hourly[0].weather[0].icon
     var image = R.drawable.cloudy
     if (icon == "01d") {
