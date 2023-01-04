@@ -45,7 +45,7 @@ fun NavBar() {
                 selected = selectedItem == index,
                 onClick = { selectedItem = index },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = colors.secondary,
+                    selectedIconColor = Color(0xFFd68118),
                     unselectedIconColor = Color.White,
                     indicatorColor = colors.primaryVariant
                 )

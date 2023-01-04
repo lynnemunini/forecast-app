@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.MaterialTheme.colors
@@ -18,8 +19,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -39,6 +42,7 @@ import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.location.CustomDialog
 import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.screens.main.MainViewModel
+import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -218,7 +222,7 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
             ) {
                 CircularProgressIndicator(color = Color(0xFFd68118))
                 Spacer(modifier = Modifier.height(10.dp))
-                androidx.compose.material3.Text("Loading weather information", color = Color.White)
+                androidx.compose.material3.Text("Loading weather information", color = Color.White, fontFamily = poppinsFamily)
             }
         } else if (weatherData.data != null) {
             Column(
@@ -249,13 +253,24 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 } else {
                     R.drawable.cloudy
                 }
-                Image(
-                    painter = painterResource(id = image),
-                    contentDescription = "WeatherIcon",
-                    modifier = Modifier.scale(
-                        1F
+                Box(modifier = Modifier.background(
+                    brush = Brush.radialGradient(
+                        colors = listOf(
+                            colors.secondary,
+                            colors.primary,Color.Transparent,
+                        ), tileMode = TileMode.Clamp
+                    ),alpha = 0.7F
+                )) {
+                    Image(
+                        painter = painterResource(id = image),
+                        contentDescription = "WeatherIcon",
+                        modifier = Modifier
+                            .scale(
+                                1F
+                            )
                     )
-                )
+
+                }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
@@ -263,8 +278,9 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                     Text(
                         weatherData.data!!.current.weather[0].description.split(' ')
                             .joinToString(separator = " ") { word -> word.replaceFirstChar { it.uppercase() } },
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        fontFamily = poppinsFamily
                     )
                 }
                 Row(
@@ -276,17 +292,19 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                             withStyle(
                                 style = SpanStyle(
                                     color = colors.onPrimary,
-                                    fontSize = 40.sp,
-                                    fontWeight = FontWeight.Bold
+                                    fontSize = 50.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = poppinsFamily
                                 )
                             ) {
                                 append(weatherData.data!!.current.temp.toInt().toString())
                             }
                             withStyle(
                                 style = SpanStyle(
-                                    color = colors.secondary,
-                                    fontSize = 40.sp,
-                                    fontWeight = FontWeight.Bold
+                                    color = Color(0xFFd68118),
+                                    fontSize = 45.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = poppinsFamily
                                 )
                             ) {
                                 append("°")
@@ -295,10 +313,14 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 }
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth().padding(start = 10.dp, end = 10.dp),
+                        .fillMaxWidth()
+                        .padding(start = 15.dp, end = 15.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Image(
                             painter = painterResource(id = R.drawable.pressure),
                             contentDescription = "PressureIcon",
@@ -311,12 +333,16 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                         Text(
                             weatherData.data!!.current.pressure.toString() + "hPa",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            fontFamily = poppinsFamily
                         )
                         Spacer(modifier = Modifier.height(5.dp))
-                        Text("Pressure", fontSize = 14.sp)
+                        Text("Pressure", fontSize = 12.sp, fontFamily = poppinsFamily)
                     }
-                    Column(verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
                         Image(
                             painter = painterResource(id = R.drawable.wind),
@@ -331,12 +357,16 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                         Text(
                             weatherData.data!!.current.wind_speed.toInt().toString() + "m/s",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            fontFamily = poppinsFamily
                         )
                         Spacer(modifier = Modifier.height(5.dp))
-                        Text("Wind", fontSize = 14.sp)
+                        Text("Wind", fontSize = 12.sp, fontFamily = poppinsFamily)
                     }
-                    Column(verticalArrangement = Arrangement.SpaceBetween, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        verticalArrangement = Arrangement.SpaceBetween,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         Image(
                             painter = painterResource(id = R.drawable.humidity),
                             contentDescription = "HumidityIcon",
@@ -349,10 +379,11 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                         Text(
                             weatherData.data!!.current.humidity.toString() + "%",
                             fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
+                            fontSize = 18.sp,
+                            fontFamily = poppinsFamily
                         )
                         Spacer(modifier = Modifier.height(5.dp))
-                        Text("Humidity", fontSize = 14.sp)
+                        Text("Humidity", fontSize = 12.sp, fontFamily = poppinsFamily)
                     }
                 }
             }
@@ -367,7 +398,7 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
         ) {
             CircularProgressIndicator(color = Color(0xFFd68118))
             Spacer(modifier = Modifier.height(10.dp))
-            androidx.compose.material3.Text("Retrieving your location", color = Color.White)
+            androidx.compose.material3.Text("Retrieving your location", color = Color.White, fontFamily = poppinsFamily)
         }
     }
 }

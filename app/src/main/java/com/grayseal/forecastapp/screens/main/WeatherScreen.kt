@@ -5,9 +5,10 @@ import android.content.Context
 import android.location.Geocoder
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -16,9 +17,10 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.grayseal.forecastapp.utils.getCurrentDate
+import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.widgets.NavBar
 import getLocationName
 import kotlinx.coroutines.Dispatchers
@@ -62,6 +64,7 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeElements(navController: NavController, mainViewModel: MainViewModel, context: Context) {
+
     val latitude = remember {
         mutableStateOf(360.0)
     }
@@ -80,57 +83,33 @@ fun HomeElements(navController: NavController, mainViewModel: MainViewModel, con
             }
         }
     }
-    val commaIndex = locationName.indexOf(",")
-    val name = if (commaIndex >= 0) {
-        locationName.substring(0, commaIndex)
-    } else {
-        locationName
-    }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 10.dp), horizontalArrangement = Arrangement.Center
+            .padding(20.dp), horizontalArrangement = Arrangement.Center
     ) {
+        Icon(
+            Icons.Outlined.LocationOn,
+            contentDescription = "Location Icon",
+            tint = colors.secondary
+        )
         Text(
-            name,
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
+            locationName,
+            fontSize = 16.sp,
+            fontFamily = poppinsFamily
         )
     }
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 10.dp), horizontalArrangement = Arrangement.Center
+            .padding(start = 15.dp, end = 15.dp), horizontalArrangement = Arrangement.Start
     ) {
-        Text(getCurrentDate(), style = MaterialTheme.typography.bodySmall)
-    }
-    Spacer(modifier = Modifier.height(10.dp))
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        ElevatedButton(
-            onClick = { /*TODO("Not yet Implemented")*/ },
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.elevatedButtonColors(
-                containerColor = colors.secondary,
-                contentColor = Color.White
-            ),
-            elevation = ButtonDefaults.buttonElevation(6.dp)
-        ) {
-            Text("Forecast")
-
-        }
-        ElevatedButton(
-            onClick = { /*TODO("Not yet Implemented")*/ },
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.elevatedButtonColors(
-                containerColor = colors.primaryVariant,
-                contentColor = Color.White
-            ),
-            elevation = ButtonDefaults.buttonElevation(6.dp)
-        ) {
-            Text("Air Quality")
-
-        }
+        Text(
+            "Today's Report",
+            fontSize = 30.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = poppinsFamily
+        )
     }
     GetCurrentLocation(
         mainViewModel = mainViewModel,

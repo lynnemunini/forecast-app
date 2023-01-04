@@ -111,6 +111,9 @@ dependencies {
 
     // provides Android runtime permissions support for Jetpack Compose
     implementation "com.google.accompanist:accompanist-permissions:0.28.0"
+
+    // To use the Palette class from the AndroidX Palette library
+    implementation 'androidx.palette:palette:1.0.0'
 }
 
 // Allow references to generated code
