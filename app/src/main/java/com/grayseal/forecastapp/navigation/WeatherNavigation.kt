@@ -6,7 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.grayseal.forecastapp.screens.ForecastScreen
+import com.grayseal.forecastapp.screens.forecast.ForecastScreen
 import com.grayseal.forecastapp.screens.location.LocationScreen
 import com.grayseal.forecastapp.screens.SettingScreen
 import com.grayseal.forecastapp.screens.main.MainViewModel
@@ -25,7 +25,7 @@ fun WeatherNavigation(context: Context) {
             WeatherScreen(navController = navController, mainViewModel, context)
         }
         composable(WeatherScreens.ForecastScreen.name) {
-            ForecastScreen(navController = navController, mainViewModel)
+            ForecastScreen(navController = navController, mainViewModel, context)
         }
         composable(WeatherScreens.LocationScreen.name) {
             LocationScreen(navController = navController, mainViewModel)

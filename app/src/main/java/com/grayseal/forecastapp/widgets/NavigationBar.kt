@@ -18,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.grayseal.forecastapp.navigation.WeatherScreens
 
 @Composable
-fun NavBar() {
+fun NavBar(navController: NavController) {
     var selectedItem by remember { mutableStateOf(0) }
     val items = mapOf(
         "Home" to Icons.Filled.Home,
@@ -43,7 +45,8 @@ fun NavBar() {
             NavigationBarItem(
                 icon = { items[key]?.let { Icon(it, contentDescription = key) } },
                 selected = selectedItem == index,
-                onClick = { selectedItem = index },
+                onClick = { selectedItem = index
+                    navController.navigate(route = WeatherScreens.ForecastScreen.name, )},
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFFd68118),
                     unselectedIconColor = Color.White,

@@ -55,7 +55,7 @@ fun WeatherScreen(navController: NavController, mainViewModel: MainViewModel, co
                 )
             }
         }, bottomBar = {
-            NavBar()
+            NavBar(navController)
         }, containerColor = Color.Transparent)
     }
 
@@ -117,7 +117,7 @@ fun HomeElements(navController: NavController, mainViewModel: MainViewModel, con
         latitude = latitude,
         longitude = longitude
     )
-    NavBar()
+    NavBar(navController)
 }
 
 suspend fun getLocationName(
