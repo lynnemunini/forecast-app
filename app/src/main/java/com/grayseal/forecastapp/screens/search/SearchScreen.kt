@@ -3,17 +3,11 @@ package com.grayseal.forecastapp.screens.search
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.components.InputField
+import com.grayseal.forecastapp.navigation.WeatherScreens
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.widgets.NavBar
 
@@ -81,8 +76,8 @@ fun SearchScreen(navController: NavController, context: Context) {
                         textAlign = TextAlign.Center
                     )
                 }
-                SearchBar(navController = navController) {
-                    Log.d("TAG", "SearchScreen: $it")
+                SearchBar(navController = navController) { city ->
+                    navController.navigate(WeatherScreens.WeatherScreen.name + "/$city")
                 }
             }
         }, bottomBar = {
@@ -116,24 +111,8 @@ fun SearchBar(navController: NavController, onSearch: (String) -> Unit = {}) {
                 if (!valid) return@KeyboardActions
                 onSearch(searchState.value.trim())
                 keyboardController?.hide()
+                searchState.value = ""
             })
-    }
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 15.dp, end = 15.dp), horizontalArrangement = Arrangement.Center) {
-        TextButton(
-            onClick = { navController.popBackStack() },
-            enabled = valid,
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = colors.secondary,
-                disabledContainerColor = colors.primaryVariant,
-                contentColor = Color.White
-            )
-        ) {
-            Text("Done", fontFamily = poppinsFamily, fontWeight = FontWeight.Medium)
-        }
-
     }
 }
 
