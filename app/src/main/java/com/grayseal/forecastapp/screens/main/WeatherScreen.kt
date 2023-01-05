@@ -2,6 +2,7 @@ package com.grayseal.forecastapp.screens.main
 
 import GetCurrentLocation
 import android.content.Context
+import android.location.Address
 import android.location.Geocoder
 import android.util.Log
 import androidx.compose.foundation.background
@@ -38,12 +39,31 @@ fun WeatherScreen(
     city: String?,
 ) {
     Log.d("City", "$city")
-    val latitude = remember {
-        mutableStateOf(360.0)
+    lateinit var latitude: MutableState<Double>
+    lateinit var longitude: MutableState<Double>
+
+    if(city == "default"){
+        latitude = remember {
+            mutableStateOf(360.0)
+        }
+        longitude = remember {
+            mutableStateOf(360.0)
+        }
     }
-    val longitude = remember {
-        mutableStateOf(360.0)
+
+    else{
+        val address = city?.let { getLatLon(context, it) }
+        if (address != null) {
+            latitude = remember {
+                mutableStateOf(address.latitude)
+            }
+            longitude = remember {
+                mutableStateOf(address.longitude)
+            }
+        }
     }
+
+
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
     Box(
         modifier = Modifier
@@ -101,7 +121,7 @@ fun HomeElements(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(20.dp), horizontalArrangement = Arrangement.Center
+            .padding(top = 20.dp, bottom = 10.dp), horizontalArrangement = Arrangement.Center
     ) {
         Icon(
             Icons.Outlined.LocationOn,
@@ -156,5 +176,10 @@ suspend fun getLocationName(
     }
 }
 
+fun getLatLon(context: Context, cityName: String): Address {
+    val geocoder = Geocoder(context)
+    val addresses = geocoder.getFromLocationName(cityName, 1)
+    return addresses!![0]
+}
 
 

@@ -36,7 +36,7 @@ fun WeatherNavigation(context: Context) {
             ForecastScreen(navController = navController)
         }
         composable(WeatherScreens.SearchScreen.name){
-            SearchScreen(navController = navController, context = context)
+            SearchScreen(navController = navController)
         }
         composable(WeatherScreens.SettingScreen.name) {
             SettingScreen(navController = navController)

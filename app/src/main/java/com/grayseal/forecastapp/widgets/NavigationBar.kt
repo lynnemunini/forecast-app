@@ -31,7 +31,7 @@ fun NavBar(navController: NavController) {
         "Settings" to Icons.Filled.Settings
     )
     val keys = listOf("Home", "Search", "Forecast", "Settings")
-    val defaultCity = "Nairobi"
+    val defaultCity = "default"
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth()

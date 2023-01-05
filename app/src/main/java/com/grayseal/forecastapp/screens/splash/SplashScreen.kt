@@ -27,7 +27,7 @@ fun SplashScreen(navController: NavController) {
     val scale = remember {
         androidx.compose.animation.core.Animatable(0f)
     }
-    val defaultCity = "Nairobi"
+    val defaultCity = "default"
     LaunchedEffect(key1 = true, block = {
         scale.animateTo(targetValue = 0.8f, animationSpec = tween(durationMillis = 1000, easing = {
             OvershootInterpolator(4f).getInterpolation(it)

@@ -32,10 +32,8 @@ import com.grayseal.forecastapp.widgets.NavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(navController: NavController, context: Context) {
+fun SearchScreen(navController: NavController) {
     val gradientColors = listOf(Color(0xFF060620), MaterialTheme.colors.primary)
-
-    //val address = getLatLon(context, searchState.value)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -114,10 +112,4 @@ fun SearchBar(navController: NavController, onSearch: (String) -> Unit = {}) {
                 searchState.value = ""
             })
     }
-}
-
-fun getLatLon(context: Context, cityName: String): Address {
-    val geocoder = Geocoder(context)
-    val addresses = geocoder.getFromLocationName(cityName, 1)
-    return addresses!![0]
 }
