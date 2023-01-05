@@ -14,7 +14,7 @@ import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.screens.SettingScreen
 import com.grayseal.forecastapp.screens.forecast.ForecastScreen
-import com.grayseal.forecastapp.screens.location.LocationScreen
+import com.grayseal.forecastapp.screens.search.LocationScreen
 import com.grayseal.forecastapp.screens.main.MainViewModel
 import com.grayseal.forecastapp.screens.main.WeatherScreen
 import com.grayseal.forecastapp.screens.splash.SplashScreen
