@@ -31,7 +31,7 @@ fun NavBar(navController: NavController) {
         "Settings" to Icons.Filled.Settings
     )
     val keys = listOf("Home", "Search", "Forecast", "Settings")
-
+    val defaultCity = "Nairobi"
     NavigationBar(
         modifier = Modifier
             .fillMaxWidth()
@@ -56,7 +56,7 @@ fun NavBar(navController: NavController) {
                         navController.navigate(route = WeatherScreens.SettingScreen.name,)
                     }
                     else{
-                        navController.navigate(route = WeatherScreens.WeatherScreen.name)
+                        navController.navigate(route = WeatherScreens.WeatherScreen.name+"/$defaultCity")
                     }
                           },
                 colors = NavigationBarItemDefaults.colors(

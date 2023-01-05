@@ -109,7 +109,7 @@ fun SearchBar(navController: NavController, onSearch: (String) -> Unit = {}) {
     ) {
         InputField(
             valueState = searchState,
-            labelId = "Search",
+            labelId = "City name",
             enabled = true,
             isSingleLine = true,
             onAction = KeyboardActions {
