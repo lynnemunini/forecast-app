@@ -46,7 +46,19 @@ fun NavBar(navController: NavController) {
                 icon = { items[key]?.let { Icon(it, contentDescription = key) } },
                 selected = selectedItem == index,
                 onClick = { selectedItem = index
-                    navController.navigate(route = WeatherScreens.ForecastScreen.name, )},
+                    if (selectedItem == 1) {
+                        navController.navigate(route = WeatherScreens.SearchScreen.name,)
+                    }
+                    else if (selectedItem == 2) {
+                        navController.navigate(route = WeatherScreens.ForecastScreen.name,)
+                    }
+                    else if (selectedItem == 3) {
+                        navController.navigate(route = WeatherScreens.SettingScreen.name,)
+                    }
+                    else{
+                        navController.navigate(route = WeatherScreens.WeatherScreen.name)
+                    }
+                          },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFFd68118),
                     unselectedIconColor = Color.White,

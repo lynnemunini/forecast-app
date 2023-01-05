@@ -3,7 +3,7 @@ package com.grayseal.forecastapp.navigation
 enum class WeatherScreens {
     SplashScreen,
     ForecastScreen,
-    LocationScreen,
+    SearchScreen,
     WeatherScreen,
     SettingScreen;
 
@@ -12,7 +12,7 @@ enum class WeatherScreens {
             SplashScreen.name -> SplashScreen
             WeatherScreen.name -> WeatherScreen
             ForecastScreen.name -> ForecastScreen
-            LocationScreen.name -> LocationScreen
+            SearchScreen.name -> SearchScreen
             SettingScreen.name -> SettingScreen
             null -> SplashScreen
             else -> throw IllegalArgumentException("Route $route is not recognized")

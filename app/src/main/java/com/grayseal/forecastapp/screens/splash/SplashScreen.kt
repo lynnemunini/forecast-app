@@ -27,12 +27,13 @@ fun SplashScreen(navController: NavController) {
     val scale = remember {
         androidx.compose.animation.core.Animatable(0f)
     }
+    val defaultCity = "Nairobi"
     LaunchedEffect(key1 = true, block = {
         scale.animateTo(targetValue = 0.8f, animationSpec = tween(durationMillis = 1000, easing = {
             OvershootInterpolator(4f).getInterpolation(it)
         }))
         delay(1000L)
-        navController.navigate(route = WeatherScreens.WeatherScreen.name)
+        navController.navigate(route = WeatherScreens.WeatherScreen.name+"/$defaultCity")
     })
 
     Surface() {

@@ -2,10 +2,14 @@ package com.grayseal.forecastapp.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
@@ -27,8 +31,8 @@ fun InputField(
     labelId: String,
     enabled: Boolean,
     isSingleLine: Boolean,
-    keyBoardType: KeyboardType = KeyboardType.Number,
-    imeAction: ImeAction = ImeAction.Next,
+    keyBoardType: KeyboardType = KeyboardType.Ascii,
+    imeAction: ImeAction = ImeAction.Done,
     onAction: KeyboardActions = KeyboardActions.Default
 ) {
     TextField(
@@ -40,26 +44,27 @@ fun InputField(
             )
         },
         singleLine = isSingleLine,
-        textStyle = TextStyle(fontSize = 18.sp, color = MaterialTheme.colors.onBackground),
+        textStyle = TextStyle(fontSize = 14.sp, color = Color.White, fontFamily = poppinsFamily),
         enabled = enabled,
         keyboardOptions = KeyboardOptions(keyboardType = keyBoardType, imeAction = imeAction),
         keyboardActions = onAction,
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 10.dp),
-        label = {
-            Text(text = labelId)
-        },
         onValueChange = {
             valueState.value = it
         },
-        placeholder = { Text(text = labelId, fontFamily = poppinsFamily) },
+        placeholder = { Text(text = labelId, fontFamily = poppinsFamily, fontSize = 14.sp) },
         colors = TextFieldDefaults.textFieldColors(
             textColor = Color.White,
             backgroundColor = colors.primaryVariant,
             cursorColor = colors.secondary,
             leadingIconColor = Color.White,
-            placeholderColor = Color.LightGray
-        )
+            placeholderColor = Color.LightGray,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+        ),
+        shape = RoundedCornerShape(10.dp)
     )
 }
+

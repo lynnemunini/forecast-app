@@ -3,6 +3,7 @@ package com.grayseal.forecastapp.screens.main
 import GetCurrentLocation
 import android.content.Context
 import android.location.Geocoder
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme.colors
@@ -31,12 +32,18 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WeatherScreen(
-    mainViewModel: MainViewModel,
     navController: NavController,
+    mainViewModel: MainViewModel,
     context: Context,
-    latitude: MutableState<Double>,
-    longitude: MutableState<Double>,
+    city: String?,
 ) {
+    Log.d("City", "$city")
+    val latitude = remember {
+        mutableStateOf(360.0)
+    }
+    val longitude = remember {
+        mutableStateOf(360.0)
+    }
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
     Box(
         modifier = Modifier
@@ -119,7 +126,6 @@ fun HomeElements(
             fontFamily = poppinsFamily
         )
     }
-
     GetCurrentLocation(
         mainViewModel = mainViewModel,
         context = context,

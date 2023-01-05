@@ -29,13 +29,11 @@ import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.utils.getCurrentDate
 import com.grayseal.forecastapp.widgets.NavBar
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForecastScreen(
     navController: NavController,
-    weatherData: DataOrException<Weather, Boolean, Exception>
 ) {
-    val gradientColors = listOf(Color(0xFF060620), colors.primary)
+   /* val gradientColors = listOf(Color(0xFF060620), colors.primary)
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -76,10 +74,9 @@ fun ForecastScreen(
         }, bottomBar = {
             NavBar(navController)
         }, containerColor = Color.Transparent)
-    }
+    }*/
 }
 
-@Preview(showBackground = true)
 @Composable
 fun ForecastMainElements() {
     Row(
