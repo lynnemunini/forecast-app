@@ -11,6 +11,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -24,7 +25,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.components.InputField
 import com.grayseal.forecastapp.navigation.WeatherScreens
@@ -39,6 +39,7 @@ fun SearchScreen(
     context: Context,
     favouriteViewModel: FavouriteViewModel
 ) {
+    val list = favouriteViewModel.favList.collectAsState().value
     val gradientColors = listOf(Color(0xFF060620), MaterialTheme.colors.primary)
     Box(
         modifier = Modifier
