@@ -1,8 +1,9 @@
 package com.grayseal.forecastapp.screens.search
 
 import android.content.Context
-import android.location.Address
-import android.location.Geocoder
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
@@ -32,7 +33,7 @@ import com.grayseal.forecastapp.widgets.NavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(navController: NavController) {
+fun SearchScreen(navController: NavController, context: Context) {
     val gradientColors = listOf(Color(0xFF060620), MaterialTheme.colors.primary)
     Box(
         modifier = Modifier
@@ -74,8 +75,17 @@ fun SearchScreen(navController: NavController) {
                         textAlign = TextAlign.Center
                     )
                 }
-                SearchBar(navController = navController) { city ->
-                    navController.navigate(WeatherScreens.WeatherScreen.name + "/$city")
+                SearchBar() { city ->
+                    val connectivityManager =
+                        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                    val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
+                    val isConnected: Boolean = activeNetwork?.isConnected == true
+                    if (isConnected) {
+                        navController.navigate(WeatherScreens.WeatherScreen.name + "/$city")
+                    } else {
+                        Toast.makeText(context, "No internet connection!", Toast.LENGTH_LONG).show()
+                    }
+
                 }
             }
         }, bottomBar = {
@@ -86,7 +96,7 @@ fun SearchScreen(navController: NavController) {
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun SearchBar(navController: NavController, onSearch: (String) -> Unit = {}) {
+fun SearchBar(onSearch: (String) -> Unit = {}) {
     val searchState = rememberSaveable {
         mutableStateOf("")
     }
