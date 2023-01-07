@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -28,6 +29,7 @@ import getLocationName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.IOException
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,16 +44,14 @@ fun WeatherScreen(
     lateinit var latitude: MutableState<Double>
     lateinit var longitude: MutableState<Double>
 
-    if(city == "default"){
+    if (city == "default") {
         latitude = remember {
             mutableStateOf(360.0)
         }
         longitude = remember {
             mutableStateOf(360.0)
         }
-    }
-
-    else{
+    } else {
         val address = city?.let { getLatLon(context, it) }
         if (address != null) {
             latitude = remember {
@@ -93,7 +93,6 @@ fun WeatherScreen(
             NavBar(navController)
         }, containerColor = Color.Transparent)
     }
-
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -114,7 +113,12 @@ fun HomeElements(
     if (latitude.value != 360.0 && longitude.value != 360.0) {
         LaunchedEffect(latitude, longitude) {
             scope.launch {
-                locationName = getLocationName(context, latitude, longitude)
+                locationName = try {
+                    getLocationName(context, latitude, longitude)
+                } catch (e: IOException) {
+                    // show a message to the user
+                    ""
+                }
             }
         }
     }
@@ -152,7 +156,6 @@ fun HomeElements(
         latitude = latitude,
         longitude = longitude
     )
-    NavBar(navController)
 }
 
 suspend fun getLocationName(
