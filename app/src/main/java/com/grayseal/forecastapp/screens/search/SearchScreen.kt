@@ -24,6 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.components.InputField
 import com.grayseal.forecastapp.navigation.WeatherScreens
@@ -33,7 +34,11 @@ import com.grayseal.forecastapp.widgets.NavBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(navController: NavController, context: Context) {
+fun SearchScreen(
+    navController: NavController,
+    context: Context,
+    favouriteViewModel: FavouriteViewModel
+) {
     val gradientColors = listOf(Color(0xFF060620), MaterialTheme.colors.primary)
     Box(
         modifier = Modifier
