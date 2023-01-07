@@ -13,7 +13,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
@@ -29,7 +28,6 @@ import getLocationName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +81,6 @@ fun WeatherScreen(
             ) {
                 HomeElements(
                     mainViewModel = mainViewModel,
-                    navController = navController,
                     context = context,
                     latitude = latitude,
                     longitude = longitude,
@@ -99,7 +96,6 @@ fun WeatherScreen(
 @Composable
 fun HomeElements(
     mainViewModel: MainViewModel,
-    navController: NavController,
     context: Context,
     latitude: MutableState<Double>,
     longitude: MutableState<Double>,
@@ -113,12 +109,7 @@ fun HomeElements(
     if (latitude.value != 360.0 && longitude.value != 360.0) {
         LaunchedEffect(latitude, longitude) {
             scope.launch {
-                locationName = try {
-                    getLocationName(context, latitude, longitude)
-                } catch (e: IOException) {
-                    // show a message to the user
-                    ""
-                }
+                locationName = getLocationName(context, latitude, longitude)
             }
         }
     }

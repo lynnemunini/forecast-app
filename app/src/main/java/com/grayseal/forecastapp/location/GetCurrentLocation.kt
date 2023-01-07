@@ -276,7 +276,9 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
 
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(top= 5.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 5.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(

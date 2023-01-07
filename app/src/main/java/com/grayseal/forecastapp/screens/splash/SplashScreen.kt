@@ -33,7 +33,7 @@ fun SplashScreen(navController: NavController) {
             OvershootInterpolator(4f).getInterpolation(it)
         }))
         delay(1000L)
-        navController.navigate(route = WeatherScreens.WeatherScreen.name+"/$defaultCity")
+        navController.navigate(route = WeatherScreens.WeatherScreen.name + "/$defaultCity")
     })
 
     Surface() {
