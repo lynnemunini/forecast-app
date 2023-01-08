@@ -327,7 +327,7 @@ fun favCard(
                 }
             },
         shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(20.dp),
+        elevation = CardDefaults.cardElevation(500.dp),
         colors = CardDefaults.cardColors(containerColor = color)
     ) {
         val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
