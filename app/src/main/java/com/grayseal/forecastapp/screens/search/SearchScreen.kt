@@ -14,6 +14,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Cancel
+import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -119,33 +122,39 @@ fun SearchScreen(
                                     favourite = list[0],
                                     context = context,
                                     navController = navController,
-                                    mainViewModel = mainViewModel
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
                                 )
                                 favCard(
                                     1,
                                     favourite = list[1],
                                     context = context,
                                     navController = navController,
-                                    mainViewModel = mainViewModel
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
                                 )
 
                             }
-                            Column(modifier = Modifier
-                                .fillMaxWidth(0.5f)
-                                .padding(top = 20.dp)) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth(0.5f)
+                                    .padding(top = 20.dp)
+                            ) {
                                 favCard(
                                     2,
                                     favourite = list[2],
                                     context = context,
                                     navController = navController,
-                                    mainViewModel = mainViewModel
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
                                 )
                                 favCard(
                                     3,
                                     favourite = list[3],
                                     context = context,
                                     navController = navController,
-                                    mainViewModel = mainViewModel
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
                                 )
 
                             }
@@ -165,14 +174,16 @@ fun SearchScreen(
                                         favourite = list[0],
                                         context = context,
                                         navController = navController,
-                                        mainViewModel = mainViewModel
+                                        mainViewModel = mainViewModel,
+                                        favouriteViewModel = favouriteViewModel
                                     )
                                     favCard(
                                         1,
                                         favourite = list[1],
                                         context = context,
                                         navController = navController,
-                                        mainViewModel = mainViewModel
+                                        mainViewModel = mainViewModel,
+                                        favouriteViewModel = favouriteViewModel
                                     )
 
                                 }
@@ -186,7 +197,8 @@ fun SearchScreen(
                                         favourite = list[2],
                                         context = context,
                                         navController = navController,
-                                        mainViewModel = mainViewModel
+                                        mainViewModel = mainViewModel,
+                                        favouriteViewModel = favouriteViewModel
                                     )
                                 }
                             }
@@ -203,30 +215,35 @@ fun SearchScreen(
                                         favourite = list[0],
                                         context = context,
                                         navController = navController,
-                                        mainViewModel = mainViewModel
+                                        mainViewModel = mainViewModel,
+                                        favouriteViewModel = favouriteViewModel
                                     )
                                     favCard(
                                         1,
                                         favourite = list[1],
                                         context = context,
                                         navController = navController,
-                                        mainViewModel = mainViewModel
+                                        mainViewModel = mainViewModel,
+                                        favouriteViewModel = favouriteViewModel
                                     )
 
                                 }
                             }
                         } else {
                             Row(
-                                modifier = Modifier.fillMaxSize(),
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .padding(15.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
-                                Column() {
+                                Column(modifier = Modifier.fillMaxWidth(0.5f)) {
                                     favCard(
                                         0,
                                         favourite = list[0],
                                         context = context,
                                         navController = navController,
-                                        mainViewModel = mainViewModel
+                                        mainViewModel = mainViewModel,
+                                        favouriteViewModel = favouriteViewModel
                                     )
                                 }
                             }
@@ -277,7 +294,8 @@ fun favCard(
     favourite: Favourite,
     context: Context,
     navController: NavController,
-    mainViewModel: MainViewModel
+    mainViewModel: MainViewModel,
+    favouriteViewModel: FavouriteViewModel
 ) {
     var color = colors.primaryVariant
     if (index == 0) {
@@ -299,8 +317,8 @@ fun favCard(
                         .show()
                 }
             },
-        shape = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(4.dp),
+        shape = RoundedCornerShape(20.dp),
+        elevation = CardDefaults.cardElevation(20.dp),
         colors = CardDefaults.cardColors(containerColor = color)
     ) {
         val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
@@ -317,16 +335,17 @@ fun favCard(
                     .padding(15.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(modifier = Modifier.fillMaxWidth(0.5f)) {
+                Column(modifier = Modifier.fillMaxWidth(0.3f)) {
                     Text(
                         weatherData.data!!.current.temp.toInt().toString() + "°",
                         fontFamily = poppinsFamily,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 22.sp,
                     )
                     Text(
                         weatherData.data!!.current.weather[0].description.split(' ')
                             .joinToString(separator = " ") { word -> word.replaceFirstChar { it.uppercase() } },
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         fontWeight = FontWeight.ExtraLight,
                         fontFamily = poppinsFamily
                     )
@@ -367,9 +386,21 @@ fun favCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(15.dp),
-                horizontalArrangement = Arrangement.Start
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(favourite.city, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium)
+                Column(modifier = Modifier.fillMaxWidth(0.7f)) {
+                    Text(favourite.city, fontFamily = poppinsFamily, fontWeight = FontWeight.Medium)
+                }
+                Column(verticalArrangement = Arrangement.Bottom) {
+                    Icon(
+                        imageVector = Icons.Outlined.Cancel,
+                        contentDescription = "Delete Favourite",
+                        tint = Color(0xFFd68118),
+                        modifier = Modifier.clickable {
+                            favouriteViewModel.deleteFavourite(favourite)
+                        })
+
+                }
             }
         }
     }
