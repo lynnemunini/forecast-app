@@ -22,8 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.grayseal.forecastapp.model.Favourite
-import com.grayseal.forecastapp.screens.search.FavouriteViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.widgets.NavBar
 import getLocationName
@@ -37,7 +35,6 @@ import java.util.*
 fun WeatherScreen(
     navController: NavController,
     mainViewModel: MainViewModel,
-    favouriteViewModel: FavouriteViewModel,
     context: Context,
     city: String?,
 ) {
@@ -61,14 +58,6 @@ fun WeatherScreen(
             longitude = remember {
                 mutableStateOf(address.longitude)
             }
-            // Insert record to database
-            favouriteViewModel.insertFavourite(
-                Favourite(
-                    city = city,
-                    lat = latitude.value,
-                    lon = longitude.value
-                )
-            )
         }
     }
 
@@ -122,7 +111,7 @@ fun HomeElements(
             scope.launch {
                 locationName = try {
                     getLocationName(context, latitude, longitude)
-                } catch (e: Exception){
+                } catch (e: Exception) {
                     ""
                 }
             }

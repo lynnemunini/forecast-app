@@ -16,7 +16,6 @@ import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Cancel
-import androidx.compose.material.icons.outlined.DeleteForever
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -40,6 +39,7 @@ import com.grayseal.forecastapp.model.Favourite
 import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.navigation.WeatherScreens
 import com.grayseal.forecastapp.screens.main.MainViewModel
+import com.grayseal.forecastapp.screens.main.getLatLon
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.widgets.NavBar
 
@@ -101,6 +101,17 @@ fun SearchScreen(
                     val isConnected: Boolean = activeNetwork?.isConnected == true
                     if (isConnected) {
                         navController.navigate(WeatherScreens.WeatherScreen.name + "/$city")
+                        val address = getLatLon(context, city)
+                        val latitude = address.latitude
+                        val longitude = address.longitude
+                        // Insert record to database
+                        favouriteViewModel.insertFavourite(
+                            Favourite(
+                                city = city,
+                                lat = latitude,
+                                lon = longitude
+                            )
+                        )
                     } else {
                         Toast.makeText(context, "No internet connection!", Toast.LENGTH_LONG).show()
                     }
@@ -137,7 +148,8 @@ fun SearchScreen(
                             }
                             Column(
                                 modifier = Modifier
-                                    .fillMaxWidth().padding(start=20.dp)
+                                    .fillMaxWidth()
+                                    .padding(start = 20.dp)
                             ) {
                                 favCard(
                                     2,
@@ -160,93 +172,95 @@ fun SearchScreen(
 
                         }
                     } else if (list.size == 3) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(start = 15.dp, end = 15.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(modifier = Modifier.fillMaxWidth(0.5f)) {
-                                    favCard(
-                                        0,
-                                        favourite = list[0],
-                                        context = context,
-                                        navController = navController,
-                                        mainViewModel = mainViewModel,
-                                        favouriteViewModel = favouriteViewModel
-                                    )
-                                    favCard(
-                                        1,
-                                        favourite = list[1],
-                                        context = context,
-                                        navController = navController,
-                                        mainViewModel = mainViewModel,
-                                        favouriteViewModel = favouriteViewModel
-                                    )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(start = 15.dp, end = 15.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth(0.5f)) {
+                                favCard(
+                                    0,
+                                    favourite = list[0],
+                                    context = context,
+                                    navController = navController,
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
+                                )
+                                favCard(
+                                    1,
+                                    favourite = list[1],
+                                    context = context,
+                                    navController = navController,
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
+                                )
 
-                                }
-                                Column(
-                                    modifier = Modifier.fillMaxWidth().padding(start = 20.dp)
-                                ) {
-                                    favCard(
-                                        2,
-                                        favourite = list[2],
-                                        context = context,
-                                        navController = navController,
-                                        mainViewModel = mainViewModel,
-                                        favouriteViewModel = favouriteViewModel
-                                    )
-                                }
                             }
-                        } else if (list.size == 2) {
-                            Row(
+                            Column(
                                 modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(15.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                    .fillMaxWidth()
+                                    .padding(start = 20.dp)
                             ) {
-                                Column(modifier = Modifier.fillMaxWidth(0.5f)) {
-                                    favCard(
-                                        0,
-                                        favourite = list[0],
-                                        context = context,
-                                        navController = navController,
-                                        mainViewModel = mainViewModel,
-                                        favouriteViewModel = favouriteViewModel
-                                    )
-                                    favCard(
-                                        1,
-                                        favourite = list[1],
-                                        context = context,
-                                        navController = navController,
-                                        mainViewModel = mainViewModel,
-                                        favouriteViewModel = favouriteViewModel
-                                    )
+                                favCard(
+                                    2,
+                                    favourite = list[2],
+                                    context = context,
+                                    navController = navController,
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
+                                )
+                            }
+                        }
+                    } else if (list.size == 2) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(15.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth(0.5f)) {
+                                favCard(
+                                    0,
+                                    favourite = list[0],
+                                    context = context,
+                                    navController = navController,
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
+                                )
+                                favCard(
+                                    1,
+                                    favourite = list[1],
+                                    context = context,
+                                    navController = navController,
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
+                                )
 
-                                }
                             }
-                        } else {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .padding(15.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column(modifier = Modifier.fillMaxWidth(0.5f)) {
-                                    favCard(
-                                        0,
-                                        favourite = list[0],
-                                        context = context,
-                                        navController = navController,
-                                        mainViewModel = mainViewModel,
-                                        favouriteViewModel = favouriteViewModel
-                                    )
-                                }
+                        }
+                    } else {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(15.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Column(modifier = Modifier.fillMaxWidth(0.5f)) {
+                                favCard(
+                                    0,
+                                    favourite = list[0],
+                                    context = context,
+                                    navController = navController,
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
+                                )
                             }
                         }
                     }
-
                 }
+
+            }
         }, bottomBar = {
             NavBar(navController)
         }, containerColor = Color.Transparent)

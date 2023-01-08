@@ -34,7 +34,6 @@ fun WeatherNavigation(context: Context) {
                 WeatherScreen(
                     navController = navController,
                     mainViewModel = mainViewModel,
-                    favouriteViewModel = favouriteViewModel,
                     context = context,
                     city = city
                 )
