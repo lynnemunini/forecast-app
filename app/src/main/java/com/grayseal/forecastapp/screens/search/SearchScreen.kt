@@ -280,7 +280,7 @@ fun SearchBar(onSearch: (String) -> Unit = {}) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(15.dp),
+            .padding(top = 15.dp, start = 15.dp, end = 15.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         InputField(

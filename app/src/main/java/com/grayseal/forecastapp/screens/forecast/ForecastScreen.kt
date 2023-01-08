@@ -32,6 +32,7 @@ import com.grayseal.forecastapp.widgets.NavBar
 @Composable
 fun ForecastScreen(
     navController: NavController,
+    forecastViewModel: ForecastViewModel
 ) {
    /* val gradientColors = listOf(Color(0xFF060620), colors.primary)
     Box(

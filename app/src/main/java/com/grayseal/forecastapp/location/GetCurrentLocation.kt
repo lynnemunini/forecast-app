@@ -38,7 +38,9 @@ import com.google.android.gms.tasks.CancellationTokenSource
 import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.location.CustomDialog
+import com.grayseal.forecastapp.model.CurrentWeatherObject
 import com.grayseal.forecastapp.model.Weather
+import com.grayseal.forecastapp.screens.forecast.ForecastViewModel
 import com.grayseal.forecastapp.screens.main.MainViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import kotlinx.coroutines.Dispatchers
@@ -49,6 +51,7 @@ import java.util.*
 @Composable
 fun GetCurrentLocation(
     mainViewModel: MainViewModel,
+    forecastViewModel: ForecastViewModel,
     context: Context,
     latitude: MutableState<Double>,
     longitude: MutableState<Double>,
@@ -98,6 +101,7 @@ fun GetCurrentLocation(
             }
             ShowData(
                 mainViewModel = mainViewModel,
+                forecastViewModel = forecastViewModel,
                 latitude = latitude.value,
                 longitude = longitude.value
             )
@@ -200,7 +204,12 @@ fun PermissionDeniedContent(
 }
 
 @Composable
-fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) {
+fun ShowData(
+    mainViewModel: MainViewModel,
+    forecastViewModel: ForecastViewModel,
+    latitude: Double,
+    longitude: Double
+) {
 
     if (latitude != 360.0 && longitude != 360.0) {
         // Latitude and longitude are valid, so continue as normal
@@ -227,6 +236,12 @@ fun ShowData(mainViewModel: MainViewModel, latitude: Double, longitude: Double) 
                 )
             }
         } else if (weatherData.data != null) {
+            forecastViewModel.insertCurrentWeatherObject(
+                CurrentWeatherObject(
+                    id = 1,
+                    weatherData.data!!.toString()
+                )
+            )
             Column(
                 modifier = Modifier
                     .fillMaxSize(),

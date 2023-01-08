@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.grayseal.forecastapp.navigation.WeatherScreens
+import com.grayseal.forecastapp.screens.forecast.ForecastViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.widgets.NavBar
 import getLocationName
@@ -40,6 +41,7 @@ import java.util.*
 fun WeatherScreen(
     navController: NavController,
     mainViewModel: MainViewModel,
+    forecastViewModel: ForecastViewModel,
     context: Context,
     city: String?,
 ) {
@@ -121,6 +123,7 @@ fun WeatherScreen(
             ) {
                 HomeElements(
                     mainViewModel = mainViewModel,
+                    forecastViewModel = forecastViewModel,
                     context = context,
                     latitude = latitude,
                     longitude = longitude,
@@ -136,6 +139,7 @@ fun WeatherScreen(
 @Composable
 fun HomeElements(
     mainViewModel: MainViewModel,
+    forecastViewModel: ForecastViewModel,
     context: Context,
     latitude: MutableState<Double>,
     longitude: MutableState<Double>,
@@ -187,6 +191,7 @@ fun HomeElements(
     }
     GetCurrentLocation(
         mainViewModel = mainViewModel,
+        forecastViewModel = forecastViewModel,
         context = context,
         latitude = latitude,
         longitude = longitude
