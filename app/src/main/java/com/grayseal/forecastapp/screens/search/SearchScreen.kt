@@ -102,7 +102,7 @@ fun SearchScreen(
                     if (isConnected) {
                         navController.navigate(WeatherScreens.WeatherScreen.name + "/$city")
                         val address = getLatLon(context, city)
-                        val latitude = address.latitude
+                        val latitude = address!!.latitude
                         val longitude = address.longitude
                         // Insert record to database
                         favouriteViewModel.insertFavourite(
@@ -148,7 +148,7 @@ fun SearchScreen(
                             }
                             Column(
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .fillMaxSize()
                                     .padding(start = 20.dp)
                             ) {
                                 favCard(
@@ -199,7 +199,7 @@ fun SearchScreen(
                             }
                             Column(
                                 modifier = Modifier
-                                    .fillMaxWidth()
+                                    .fillMaxSize()
                                     .padding(start = 20.dp)
                             ) {
                                 favCard(

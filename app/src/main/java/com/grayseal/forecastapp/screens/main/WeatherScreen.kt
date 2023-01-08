@@ -4,24 +4,35 @@ import GetCurrentLocation
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.grayseal.forecastapp.MainActivity
+import com.grayseal.forecastapp.NoConnection
+import com.grayseal.forecastapp.WeatherApp
+import com.grayseal.forecastapp.navigation.WeatherScreens
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.widgets.NavBar
 import getLocationName
@@ -57,6 +68,41 @@ fun WeatherScreen(
             }
             longitude = remember {
                 mutableStateOf(address.longitude)
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 15.dp, end = 15.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Sorry, it looks like the area you have tried searching for is unknown." +
+                            " Please try again by searching for a more known name of the location.",
+                    fontFamily = poppinsFamily,
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+                androidx.compose.material3.TextButton(
+                    onClick = {
+                        navController.navigate(WeatherScreens.SearchScreen.name)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.textButtonColors(containerColor = Color(0xFFd68118)),
+                    elevation = ButtonDefaults.buttonElevation(4.dp)
+                ) {
+                    Text(
+                        "Try Again",
+                        fontFamily = poppinsFamily,
+                        fontWeight = FontWeight.Medium,
+                        color = Color.White
+                    )
+
+                }
             }
         }
     }
@@ -174,10 +220,16 @@ suspend fun getLocationName(
     }
 }
 
-fun getLatLon(context: Context, cityName: String): Address {
+fun getLatLon(context: Context, cityName: String): Address? {
     val geocoder = Geocoder(context)
-    val addresses = geocoder.getFromLocationName(cityName, 1)
-    return addresses!![0]
+    return try {
+        val addresses = geocoder.getFromLocationName(cityName, 1)
+        addresses!![0]
+    } catch (e: Exception) {
+        Toast.makeText(context, "Unknown Location", Toast.LENGTH_SHORT).show()
+        null
+    }
+
 }
 
 
