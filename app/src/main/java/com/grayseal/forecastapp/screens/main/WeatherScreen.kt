@@ -4,11 +4,8 @@ import GetCurrentLocation
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -29,9 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.grayseal.forecastapp.MainActivity
-import com.grayseal.forecastapp.NoConnection
-import com.grayseal.forecastapp.WeatherApp
 import com.grayseal.forecastapp.navigation.WeatherScreens
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.widgets.NavBar
