@@ -35,6 +35,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.google.gson.Gson
 import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.location.CustomDialog
@@ -210,7 +211,7 @@ fun ShowData(
     latitude: Double,
     longitude: Double
 ) {
-
+    val gson = Gson()
     if (latitude != 360.0 && longitude != 360.0) {
         // Latitude and longitude are valid, so continue as normal
         val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
@@ -239,7 +240,7 @@ fun ShowData(
             forecastViewModel.insertCurrentWeatherObject(
                 CurrentWeatherObject(
                     id = 1,
-                    weatherData.data!!.toString()
+                    gson.toJson(weatherData.data!!)
                 )
             )
             Column(

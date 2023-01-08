@@ -1,5 +1,6 @@
 package com.grayseal.forecastapp.screens.forecast
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,24 +18,32 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.gson.Gson
 import com.grayseal.forecastapp.R
-import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.model.Hourly
 import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.utils.getCurrentDate
 import com.grayseal.forecastapp.widgets.NavBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForecastScreen(
     navController: NavController,
     forecastViewModel: ForecastViewModel
 ) {
-   /* val gradientColors = listOf(Color(0xFF060620), colors.primary)
+    val gson = Gson()
+    val currentWeatherObjectsList = forecastViewModel.weatherObjectList.collectAsState().value
+    Log.d("CURRENT WEATHER OBJECT LIST", "$currentWeatherObjectsList")
+    val currentWeatherObject = currentWeatherObjectsList[0]
+    Log.d("WEATHER", currentWeatherObject.weather)
+    val weatherData = gson.fromJson(currentWeatherObject.weather, Weather::class.java)
+
+    val gradientColors = listOf(Color(0xFF060620), colors.primary)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -47,35 +56,32 @@ fun ForecastScreen(
             )
     ) {
         Scaffold(content = { padding ->
-            if (weatherData.data != null) {
-                Column(
-                    modifier = Modifier
-                        .padding(padding),
-                ) {
-                    ForecastMainElements()
-                    ForecastData(
-                        data = weatherData.data!!
-                    )
-                }
-            } else {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator(color = Color(0xFFd68118))
-                    Spacer(modifier = Modifier.height(10.dp))
-                    androidx.compose.material3.Text(
-                        "Loading weather information",
-                        color = Color.White,
-                        fontFamily = poppinsFamily
-                    )
-                }
+            Column(
+                modifier = Modifier
+                    .padding(padding),
+            ) {
+                ForecastMainElements()
+                ForecastData(
+                    data = weatherData
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator(color = Color(0xFFd68118))
+                Spacer(modifier = Modifier.height(10.dp))
+                androidx.compose.material3.Text(
+                    "Loading weather information",
+                    color = Color.White,
+                    fontFamily = poppinsFamily
+                )
             }
         }, bottomBar = {
             NavBar(navController)
         }, containerColor = Color.Transparent)
-    }*/
+    }
 }
 
 @Composable
@@ -174,7 +180,6 @@ fun HourlyCard(image: Int, time: String, temperature: String) {
                 fontFamily = poppinsFamily,
                 color = Color.White
             )
-
         }
     }
 }

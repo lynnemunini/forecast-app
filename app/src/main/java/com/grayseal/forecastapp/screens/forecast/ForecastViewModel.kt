@@ -33,7 +33,9 @@ class ForecastViewModel @Inject constructor(private val repository: WeatherDbRep
         }
     }
 
-    fun getWeatherById(id: Int) = viewModelScope.launch { repository.getWeatherById(id) }
+    suspend fun getWeatherById(id: Int): CurrentWeatherObject {
+        return repository.getWeatherById(id)
+    }
     fun insertCurrentWeatherObject(currentWeatherObject: CurrentWeatherObject) = viewModelScope.launch { repository.insertCurrentWeatherObject(currentWeatherObject) }
     fun updateCurrentWeatherObject(currentWeatherObject: CurrentWeatherObject) = viewModelScope.launch { repository.updateCurrentWeatherObject(currentWeatherObject) }
 }
