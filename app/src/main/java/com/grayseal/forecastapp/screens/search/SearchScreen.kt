@@ -113,7 +113,7 @@ fun SearchScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .padding(15.dp),
+                                .padding(start = 15.dp, end = 15.dp),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Column(modifier = Modifier.fillMaxWidth(0.5f)) {
@@ -137,8 +137,7 @@ fun SearchScreen(
                             }
                             Column(
                                 modifier = Modifier
-                                    .fillMaxWidth(0.5f)
-                                    .padding(top = 20.dp)
+                                    .fillMaxWidth().padding(start=20.dp)
                             ) {
                                 favCard(
                                     2,
@@ -160,12 +159,11 @@ fun SearchScreen(
                             }
 
                         }
-                    } else {
-                        if (list.size == 3) {
+                    } else if (list.size == 3) {
                             Row(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(15.dp),
+                                    .padding(start = 15.dp, end = 15.dp),
                                 horizontalArrangement = Arrangement.SpaceBetween
                             ) {
                                 Column(modifier = Modifier.fillMaxWidth(0.5f)) {
@@ -188,9 +186,7 @@ fun SearchScreen(
 
                                 }
                                 Column(
-                                    modifier = Modifier
-                                        .fillMaxWidth(0.5f)
-                                        .padding(top = 20.dp)
+                                    modifier = Modifier.fillMaxWidth().padding(start = 20.dp)
                                 ) {
                                     favCard(
                                         2,
@@ -251,7 +247,6 @@ fun SearchScreen(
                     }
 
                 }
-            }
         }, bottomBar = {
             NavBar(navController)
         }, containerColor = Color.Transparent)
@@ -303,7 +298,7 @@ fun favCard(
     }
     Card(
         modifier = Modifier
-            .padding(bottom = 10.dp)
+            .padding(top = 10.dp, bottom = 10.dp)
             .clickable {
                 val connectivityManager =
                     context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -335,7 +330,7 @@ fun favCard(
                     .padding(15.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(modifier = Modifier.fillMaxWidth(0.3f)) {
+                Column(modifier = Modifier.fillMaxWidth(0.5f)) {
                     Text(
                         weatherData.data!!.current.temp.toInt().toString() + "°",
                         fontFamily = poppinsFamily,
@@ -345,7 +340,7 @@ fun favCard(
                     Text(
                         weatherData.data!!.current.weather[0].description.split(' ')
                             .joinToString(separator = " ") { word -> word.replaceFirstChar { it.uppercase() } },
-                        fontSize = 12.sp,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.ExtraLight,
                         fontFamily = poppinsFamily
                     )

@@ -120,7 +120,11 @@ fun HomeElements(
     if (latitude.value != 360.0 && longitude.value != 360.0) {
         LaunchedEffect(latitude, longitude) {
             scope.launch {
-                locationName = getLocationName(context, latitude, longitude)
+                locationName = try {
+                    getLocationName(context, latitude, longitude)
+                } catch (e: Exception){
+                    ""
+                }
             }
         }
     }
