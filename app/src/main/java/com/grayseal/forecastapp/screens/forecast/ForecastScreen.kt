@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
@@ -65,19 +66,6 @@ fun ForecastScreen(
                     data = weatherData
                 )
             }
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CircularProgressIndicator(color = Color(0xFFd68118))
-                Spacer(modifier = Modifier.height(10.dp))
-                androidx.compose.material3.Text(
-                    "Loading weather information",
-                    color = Color.White,
-                    fontFamily = poppinsFamily
-                )
-            }
         }, bottomBar = {
             NavBar(navController)
         }, containerColor = Color.Transparent)
@@ -88,7 +76,7 @@ fun ForecastScreen(
 fun ForecastMainElements() {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().padding(top = 20.dp, bottom = 20.dp), horizontalArrangement = Arrangement.Center
     ) {
         Text(
             "Forecast Report",
@@ -99,7 +87,7 @@ fun ForecastMainElements() {
     }
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().padding(15.dp)
     ) {
         Column(horizontalAlignment = Alignment.Start) {
             Text(
@@ -122,31 +110,32 @@ fun ForecastMainElements() {
 
 @Composable
 fun ForecastData(data: Weather) {
-    val icon = data.hourly[0].weather[0].icon
-    var image = R.drawable.cloudy
-    if (icon == "01d") {
-        image = R.drawable.sunny
-    } else if (icon == "02d") {
-        image = R.drawable.sunny
-    } else if (icon == "03d" || icon == "04d" || icon == "04n" || icon == "03n" || icon == "02n") {
-        image = R.drawable.cloudy
-    } else if (icon == "09d" || icon == "10n" || icon == "09n") {
-        image = R.drawable.rainy
-    } else if (icon == "10d") {
-        image = R.drawable.rainy_sunny
-    } else if (icon == "11d" || icon == "11n") {
-        image = R.drawable.thunder_lightning
-    } else if (icon == "13d" || icon == "13n") {
-        image = R.drawable.snow
-    } else if (icon == "50d" || icon == "50n") {
-        image = R.drawable.fog
-    } else if (icon == "01n") {
-        image = R.drawable.clear
-    } else {
-        R.drawable.cloudy
-    }
+
     LazyRow(modifier = Modifier.padding(2.dp), contentPadding = PaddingValues(1.dp)) {
-        items(items = data.hourly) { item: Hourly ->
+        itemsIndexed(items = data.hourly) { index, item: Hourly ->
+            val icon = data.hourly[index].weather[0].icon
+            var image = R.drawable.cloudy
+            if (icon == "01d") {
+                image = R.drawable.sunny
+            } else if (icon == "02d") {
+                image = R.drawable.sunny
+            } else if (icon == "03d" || icon == "04d" || icon == "04n" || icon == "03n" || icon == "02n") {
+                image = R.drawable.cloudy
+            } else if (icon == "09d" || icon == "10n" || icon == "09n") {
+                image = R.drawable.rainy
+            } else if (icon == "10d") {
+                image = R.drawable.rainy_sunny
+            } else if (icon == "11d" || icon == "11n") {
+                image = R.drawable.thunder_lightning
+            } else if (icon == "13d" || icon == "13n") {
+                image = R.drawable.snow
+            } else if (icon == "50d" || icon == "50n") {
+                image = R.drawable.fog
+            } else if (icon == "01n") {
+                image = R.drawable.clear
+            } else {
+                R.drawable.cloudy
+            }
             HourlyCard(
                 image = image,
                 time = java.time.format.DateTimeFormatter.ISO_INSTANT
@@ -162,24 +151,27 @@ fun ForecastData(data: Weather) {
 fun HourlyCard(image: Int, time: String, temperature: String) {
     Card(
         modifier = Modifier
-            .height(50.dp)
-            .width(70.dp),
-        shape = RoundedCornerShape(10.dp),
+            .height(100.dp)
+            .width(150.dp).padding(top = 20.dp, start = 15.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = colors.secondary),
-        elevation = CardDefaults.cardElevation(20.dp)
+        elevation = CardDefaults.cardElevation(500.dp)
     ) {
-        Column(verticalArrangement = Arrangement.Center) {
-            Image(painter = painterResource(id = image), contentDescription = "Weather Icon")
+        Row() {
+            Column(modifier = Modifier.fillMaxWidth(0.5f), verticalArrangement = Arrangement.Center) {
+                Image(painter = painterResource(id = image), contentDescription = "Weather Icon")
 
-        }
-        Column() {
-            Text(text = time, fontSize = 12.sp, fontFamily = poppinsFamily, color = Color.White)
-            Text(
-                text = "$temperature°",
-                fontSize = 12.sp,
-                fontFamily = poppinsFamily,
-                color = Color.White
-            )
+            }
+            Column() {
+                Text(text = time, fontSize = 12.sp, fontFamily = poppinsFamily, color = Color.White)
+                Text(
+                    text = "$temperature°",
+                    fontSize = 12.sp,
+                    fontFamily = poppinsFamily,
+                    color = Color.White
+                )
+            }
+
         }
     }
 }
