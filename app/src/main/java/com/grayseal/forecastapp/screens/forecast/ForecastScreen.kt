@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -64,9 +66,10 @@ fun ForecastScreen(
                     .padding(padding),
             ) {
                 ForecastMainElements()
-                ForecastData(
+                HourlyForecastData(
                     data = weatherData
                 )
+                NextForecast()
             }
         }, bottomBar = {
             NavBar(navController)
@@ -97,7 +100,7 @@ fun ForecastMainElements() {
         Column(horizontalAlignment = Alignment.Start) {
             Text(
                 "Today",
-                fontSize = 18.sp,
+                fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = poppinsFamily
             )
@@ -114,7 +117,7 @@ fun ForecastMainElements() {
 }
 
 @Composable
-fun ForecastData(data: Weather) {
+fun HourlyForecastData(data: Weather) {
 
     LazyRow(modifier = Modifier.padding(2.dp)) {
         itemsIndexed(items = data.hourly) { index, item: Hourly ->
@@ -158,9 +161,9 @@ fun ForecastData(data: Weather) {
 fun HourlyCard(image: Int, time: String, temperature: String) {
     Card(
         modifier = Modifier
-            .height(100.dp)
+            .height(120.dp)
             .width(180.dp)
-            .padding(top = 20.dp, start = 15.dp),
+            .padding(top = 20.dp, start = 15.dp, bottom = 20.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = colors.secondary),
         elevation = CardDefaults.cardElevation(500.dp)
@@ -196,6 +199,27 @@ fun HourlyCard(image: Int, time: String, temperature: String) {
 }
 
 @Composable
-fun NextForecast(){
+fun NextForecast() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(15.dp)
+    ) {
+        Column(horizontalAlignment = Alignment.Start) {
+            Text(
+                "Next forecast",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Medium,
+                fontFamily = poppinsFamily
+            )
+        }
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+            Icon(
+                imageVector = Icons.Outlined.CalendarMonth,
+                contentDescription = "Calendar",
+                tint = Color(0xFFd68118)
+            )
+        }
+    }
 
 }
