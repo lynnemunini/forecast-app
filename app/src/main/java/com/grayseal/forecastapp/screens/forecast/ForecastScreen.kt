@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
@@ -29,6 +28,9 @@ import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.utils.getCurrentDate
 import com.grayseal.forecastapp.widgets.NavBar
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,7 +78,9 @@ fun ForecastScreen(
 fun ForecastMainElements() {
     Row(
         modifier = Modifier
-            .fillMaxWidth().padding(top = 20.dp, bottom = 20.dp), horizontalArrangement = Arrangement.Center
+            .fillMaxWidth()
+            .padding(top = 20.dp, bottom = 20.dp),
+        horizontalArrangement = Arrangement.Center
     ) {
         Text(
             "Forecast Report",
@@ -87,7 +91,8 @@ fun ForecastMainElements() {
     }
     Row(
         modifier = Modifier
-            .fillMaxWidth().padding(15.dp)
+            .fillMaxWidth()
+            .padding(15.dp)
     ) {
         Column(horizontalAlignment = Alignment.Start) {
             Text(
@@ -97,7 +102,7 @@ fun ForecastMainElements() {
                 fontFamily = poppinsFamily
             )
         }
-        Column(horizontalAlignment = Alignment.End) {
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
             Text(
                 getCurrentDate(),
                 fontSize = 14.sp,
@@ -111,7 +116,7 @@ fun ForecastMainElements() {
 @Composable
 fun ForecastData(data: Weather) {
 
-    LazyRow(modifier = Modifier.padding(2.dp), contentPadding = PaddingValues(1.dp)) {
+    LazyRow(modifier = Modifier.padding(2.dp)) {
         itemsIndexed(items = data.hourly) { index, item: Hourly ->
             val icon = data.hourly[index].weather[0].icon
             var image = R.drawable.cloudy
@@ -136,11 +141,13 @@ fun ForecastData(data: Weather) {
             } else {
                 R.drawable.cloudy
             }
+            val instant = Instant.ofEpochSecond(item.dt.toLong())
+            val formatter = DateTimeFormatter.ofPattern("HH:mm")
+            val time = instant.atZone(ZoneId.of("UTC")).format(formatter)
             HourlyCard(
                 image = image,
-                time = java.time.format.DateTimeFormatter.ISO_INSTANT
-                    .format(java.time.Instant.ofEpochSecond(item.dt.toLong())),
-                temperature = item.temp.toString()
+                time = time,
+                temperature = item.temp.toInt().toString()
             )
 
         }
@@ -152,26 +159,43 @@ fun HourlyCard(image: Int, time: String, temperature: String) {
     Card(
         modifier = Modifier
             .height(100.dp)
-            .width(150.dp).padding(top = 20.dp, start = 15.dp),
+            .width(180.dp)
+            .padding(top = 20.dp, start = 15.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = colors.secondary),
         elevation = CardDefaults.cardElevation(500.dp)
     ) {
-        Row() {
-            Column(modifier = Modifier.fillMaxWidth(0.5f), verticalArrangement = Arrangement.Center) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(0.6f),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Image(painter = painterResource(id = image), contentDescription = "Weather Icon")
 
             }
-            Column() {
-                Text(text = time, fontSize = 12.sp, fontFamily = poppinsFamily, color = Color.White)
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = time, fontSize = 16.sp, fontFamily = poppinsFamily, color = Color.White)
                 Text(
-                    text = "$temperature°",
-                    fontSize = 12.sp,
+                    text = "$temperature°C",
+                    fontSize = 18.sp,
                     fontFamily = poppinsFamily,
+                    fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
             }
 
         }
     }
+}
+
+@Composable
+fun NextForecast(){
+
 }
