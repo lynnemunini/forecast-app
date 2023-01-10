@@ -20,7 +20,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -35,6 +38,7 @@ import com.grayseal.forecastapp.widgets.NavBar
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -205,7 +209,7 @@ fun NextForecast() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(15.dp)
+            .padding(start = 15.dp, end = 15.dp, top = 20.dp, bottom = 20.dp)
     ) {
         Column(horizontalAlignment = Alignment.Start) {
             Text(
@@ -281,16 +285,17 @@ fun DailyCard(day: String, date: String, temperature: String, image: Int){
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier = Modifier.padding(start = 10.dp),
+                verticalArrangement = Arrangement.Center
             ) {
-                Text(text = day, fontSize = 18.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, color = Color.White)
+                Text(text = day, fontSize = 16.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Start)
                 Text(
                     text = date,
-                    fontSize = 14.sp,
+                    fontSize = 12.sp,
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Light,
-                    color = Color.White
+                    color = Color.White,
+                    textAlign = TextAlign.Start
                 )
             }
             Column(
@@ -298,14 +303,15 @@ fun DailyCard(day: String, date: String, temperature: String, image: Int){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "$temperature°C",
-                    fontSize = 22.sp,
+                    text = "$temperature°",
+                    fontSize = 24.sp,
                     fontFamily = poppinsFamily,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     color = Color.White
                 )
             }
             Column(
+                modifier = Modifier.padding(end = 5.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

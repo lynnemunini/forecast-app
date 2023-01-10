@@ -82,7 +82,7 @@ fun WeatherScreen(
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                androidx.compose.material3.TextButton(
+                TextButton(
                     onClick = {
                         navController.navigate(WeatherScreens.SearchScreen.name)
                     },
