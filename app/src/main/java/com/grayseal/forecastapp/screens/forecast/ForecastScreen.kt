@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.gson.Gson
 import com.grayseal.forecastapp.R
+import com.grayseal.forecastapp.model.Daily
 import com.grayseal.forecastapp.model.Hourly
 import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
@@ -70,6 +72,7 @@ fun ForecastScreen(
                     data = weatherData
                 )
                 NextForecast()
+                DailyForecastData(data = weatherData)
             }
         }, bottomBar = {
             NavBar(navController)
@@ -161,9 +164,8 @@ fun HourlyForecastData(data: Weather) {
 fun HourlyCard(image: Int, time: String, temperature: String) {
     Card(
         modifier = Modifier
-            .height(120.dp)
             .width(180.dp)
-            .padding(top = 20.dp, start = 15.dp, bottom = 20.dp),
+            .padding(start = 15.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = colors.secondary),
         elevation = CardDefaults.cardElevation(500.dp)
@@ -219,6 +221,97 @@ fun NextForecast() {
                 contentDescription = "Calendar",
                 tint = Color(0xFFd68118)
             )
+        }
+    }
+
+}
+
+@Composable
+fun DailyForecastData(data: Weather) {
+    LazyColumn(modifier = Modifier.padding(start = 15.dp, end = 15.dp)) {
+        itemsIndexed(items = data.daily) { index, item: Daily ->
+            val icon = data.daily[index].weather[0].icon
+            var image = R.drawable.cloudy
+            if (icon == "01d") {
+                image = R.drawable.sunny
+            } else if (icon == "02d") {
+                image = R.drawable.sunny
+            } else if (icon == "03d" || icon == "04d" || icon == "04n" || icon == "03n" || icon == "02n") {
+                image = R.drawable.cloudy
+            } else if (icon == "09d" || icon == "10n" || icon == "09n") {
+                image = R.drawable.rainy
+            } else if (icon == "10d") {
+                image = R.drawable.rainy_sunny
+            } else if (icon == "11d" || icon == "11n") {
+                image = R.drawable.thunder_lightning
+            } else if (icon == "13d" || icon == "13n") {
+                image = R.drawable.snow
+            } else if (icon == "50d" || icon == "50n") {
+                image = R.drawable.fog
+            } else if (icon == "01n") {
+                image = R.drawable.clear
+            } else {
+                R.drawable.cloudy
+            }
+            val unixTime = item.dt
+            val instant = Instant.ofEpochSecond(unixTime.toLong())
+            val zonedDateTime = instant.atZone(ZoneId.of("UTC"))
+            val dayOfWeek = zonedDateTime.dayOfWeek
+            val month = zonedDateTime.month
+            val date = zonedDateTime.dayOfMonth
+            val monthDate = "$month, $date"
+            DailyCard(day = dayOfWeek.toString(), date = monthDate, temperature = item.temp.day.toInt().toString(), image = image)
+        }
+    }
+}
+
+@Composable
+fun DailyCard(day: String, date: String, temperature: String, image: Int){
+    Card(
+        modifier = Modifier
+            .fillMaxWidth().height(100.dp)
+            .padding(bottom = 15.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = colors.primaryVariant),
+        elevation = CardDefaults.cardElevation(500.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = day, fontSize = 18.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, color = Color.White)
+                Text(
+                    text = date,
+                    fontSize = 14.sp,
+                    fontFamily = poppinsFamily,
+                    fontWeight = FontWeight.Light,
+                    color = Color.White
+                )
+            }
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "$temperature°C",
+                    fontSize = 22.sp,
+                    fontFamily = poppinsFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+            }
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(painter = painterResource(id = image), contentDescription = "Weather Icon")
+
+            }
         }
     }
 
