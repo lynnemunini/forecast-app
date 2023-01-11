@@ -26,9 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.grayseal.forecastapp.navigation.WeatherScreens
 import com.grayseal.forecastapp.screens.forecast.ForecastViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
+import com.grayseal.forecastapp.widgets.BottomNavItem
 import com.grayseal.forecastapp.widgets.NavBar
 import getLocationName
 import kotlinx.coroutines.Dispatchers
@@ -84,7 +84,7 @@ fun WeatherScreen(
                 Spacer(modifier = Modifier.height(20.dp))
                 TextButton(
                     onClick = {
-                        navController.navigate(WeatherScreens.SearchScreen.name)
+                        navController.navigate(BottomNavItem.Search.route)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(10.dp),

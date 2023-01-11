@@ -18,7 +18,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.grayseal.forecastapp.R
-import com.grayseal.forecastapp.navigation.WeatherScreens
+import com.grayseal.forecastapp.widgets.BottomNavItem
 import kotlinx.coroutines.delay
 
 
@@ -33,7 +33,7 @@ fun SplashScreen(navController: NavController) {
             OvershootInterpolator(4f).getInterpolation(it)
         }))
         delay(1000L)
-        navController.navigate(route = WeatherScreens.WeatherScreen.name + "/$defaultCity")
+        navController.navigate(route = BottomNavItem.Home.route + "/$defaultCity")
     })
 
     Surface() {

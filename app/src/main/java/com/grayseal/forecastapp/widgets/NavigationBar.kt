@@ -1,36 +1,63 @@
 package com.grayseal.forecastapp.widgets
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Analytics
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.outlined.Analytics
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.grayseal.forecastapp.navigation.WeatherScreens
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.grayseal.forecastapp.navigation.Screen
+
+sealed class BottomNavItem(
+    val route: String,
+    val icon: ImageVector
+) {
+    object Home : BottomNavItem(
+        route = Screen.Home.route,
+        icon = Icons.Outlined.Home
+    )
+
+    object Search : BottomNavItem(
+        route = Screen.Search.route,
+        icon = Icons.Outlined.Search
+    )
+
+    object Forecast : BottomNavItem(
+        route = Screen.Forecast.route,
+        icon = Icons.Outlined.Analytics
+    )
+
+    object Settings : BottomNavItem(
+        route = Screen.Settings.route,
+        icon = Icons.Outlined.Settings
+    )
+}
 
 @Composable
 fun NavBar(navController: NavController) {
-    var selectedItem by remember { mutableStateOf(0) }
-    val items = mapOf(
-        "Home" to Icons.Filled.Home,
-        "Search" to Icons.Filled.Search,
-        "Forecast" to Icons.Filled.Analytics,
-        "Settings" to Icons.Filled.Settings
+    val items = listOf(
+        BottomNavItem.Home,
+        BottomNavItem.Search,
+        BottomNavItem.Forecast,
+        BottomNavItem.Settings
     )
-    val keys = listOf("Home", "Search", "Forecast", "Settings")
     val defaultCity = "default"
     NavigationBar(
         modifier = Modifier
@@ -41,29 +68,56 @@ fun NavBar(navController: NavController) {
             ),
         containerColor = colors.primaryVariant,
     ) {
-        keys.forEachIndexed { index, key ->
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+        items.forEach { item ->
             NavigationBarItem(
-                icon = { items[key]?.let { Icon(it, contentDescription = key) } },
-                selected = selectedItem == index,
+                icon = { Icon(item.icon, contentDescription = null) },
+                selected = currentRoute == item.route,
                 onClick = {
-                    selectedItem = index
-                    if (selectedItem == 1) {
-                        navController.navigate(route = WeatherScreens.SearchScreen.name)
-                    } else if (selectedItem == 2) {
-                        navController.navigate(route = WeatherScreens.ForecastScreen.name)
-                    } else if (selectedItem == 3) {
-                        navController.navigate(route = WeatherScreens.SettingScreen.name)
+                    if (item != BottomNavItem.Home) {
+                        if (item == BottomNavItem.Settings){
+                           /*TODO(/*Not yet Implemented*/)*/
+                        }
+                        else {
+                            navController.navigate(item.route) {
+                                // Pop up to the start destination of the graph to
+                                // avoid building up a large stack of destinations
+                                // on the back stack as users select items
+                                navController.graph.startDestinationRoute?.let { route ->
+                                    popUpTo(route) {
+                                        saveState = true
+                                    }
+                                }
+                                // Avoid multiple copies of the same destination when re-selecting the same item
+                                launchSingleTop = true
+                                // Restore state when re-selecting a previously selected item
+                                restoreState = true
+                            }
+                        }
                     } else {
-                        navController.navigate(route = WeatherScreens.WeatherScreen.name + "/$defaultCity")
+                        navController.navigate(item.route + "/$defaultCity") {
+                            // Pop up to the start destination of the graph to
+                            // avoid building up a large stack of destinations
+                            // on the back stack as users select items
+                            navController.graph.startDestinationRoute?.let { route ->
+                                popUpTo(route) {
+                                    saveState = true
+                                }
+                            }
+                            // Avoid multiple copies of the same destination when re-selecting the same item
+                            launchSingleTop = true
+                            // Restore state when re-selecting a previously selected item
+                            restoreState = true
+                        }
                     }
                 },
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFFd68118),
-                    unselectedIconColor = Color.White,
-                    indicatorColor = colors.primaryVariant
+                    indicatorColor = colors.primaryVariant,
+                    unselectedIconColor = Color.White.copy(alpha = 0.4f)
                 )
             )
         }
     }
 }
-

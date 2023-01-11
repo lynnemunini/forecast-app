@@ -37,10 +37,10 @@ import com.grayseal.forecastapp.components.InputField
 import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.model.Favourite
 import com.grayseal.forecastapp.model.Weather
-import com.grayseal.forecastapp.navigation.WeatherScreens
 import com.grayseal.forecastapp.screens.main.MainViewModel
 import com.grayseal.forecastapp.screens.main.getLatLon
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
+import com.grayseal.forecastapp.widgets.BottomNavItem
 import com.grayseal.forecastapp.widgets.NavBar
 
 
@@ -100,7 +100,7 @@ fun SearchScreen(
                     val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
                     val isConnected: Boolean = activeNetwork?.isConnected == true
                     if (isConnected) {
-                        navController.navigate(WeatherScreens.WeatherScreen.name + "/$city")
+                        navController.navigate(BottomNavItem.Home.route + "/$city")
                         val address = getLatLon(context, city)
                         val latitude = address!!.latitude
                         val longitude = address.longitude
@@ -319,7 +319,7 @@ fun favCard(
                 val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
                 val isConnected: Boolean = activeNetwork?.isConnected == true
                 if (isConnected) {
-                    navController.navigate(WeatherScreens.WeatherScreen.name + "/${favourite.city}")
+                    navController.navigate(BottomNavItem.Home.route + "/${favourite.city}")
                 } else {
                     Toast
                         .makeText(context, "No internet connection!", Toast.LENGTH_LONG)

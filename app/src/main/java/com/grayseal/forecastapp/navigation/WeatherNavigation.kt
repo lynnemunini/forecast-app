@@ -16,6 +16,7 @@ import com.grayseal.forecastapp.screens.main.WeatherScreen
 import com.grayseal.forecastapp.screens.search.FavouriteViewModel
 import com.grayseal.forecastapp.screens.search.SearchScreen
 import com.grayseal.forecastapp.screens.splash.SplashScreen
+import com.grayseal.forecastapp.widgets.BottomNavItem
 
 @Composable
 fun WeatherNavigation(context: Context) {
@@ -24,11 +25,11 @@ fun WeatherNavigation(context: Context) {
     val favouriteViewModel = hiltViewModel<FavouriteViewModel>()
     val forecastViewModel = hiltViewModel<ForecastViewModel>()
 
-    NavHost(navController = navController, startDestination = WeatherScreens.SplashScreen.name) {
-        composable(WeatherScreens.SplashScreen.name) {
+    NavHost(navController = navController, startDestination = Screen.Splash.route) {
+        composable(Screen.Splash.route) {
             SplashScreen(navController = navController)
         }
-        val route = WeatherScreens.WeatherScreen.name
+        val route = BottomNavItem.Home.route
         composable("$route/{city}", arguments = listOf(navArgument(name = "city") {
             type = NavType.StringType
         })) { navBack ->
@@ -42,13 +43,13 @@ fun WeatherNavigation(context: Context) {
                 )
             }
         }
-        composable(WeatherScreens.ForecastScreen.name) {
+        composable(BottomNavItem.Forecast.route) {
             ForecastScreen(navController = navController, forecastViewModel)
         }
-        composable(WeatherScreens.SearchScreen.name) {
+        composable(BottomNavItem.Search.route) {
             SearchScreen(navController = navController, context, favouriteViewModel, mainViewModel)
         }
-        composable(WeatherScreens.SettingScreen.name) {
+        composable(BottomNavItem.Settings.route) {
             SettingScreen(navController = navController)
         }
     }
