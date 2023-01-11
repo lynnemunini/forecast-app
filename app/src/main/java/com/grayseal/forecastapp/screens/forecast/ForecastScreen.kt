@@ -126,7 +126,7 @@ fun ForecastMainElements() {
 @Composable
 fun HourlyForecastData(data: Weather) {
 
-    LazyRow() {
+    LazyRow {
         itemsIndexed(items = data.hourly) { index, item: Hourly ->
             val icon = data.hourly[index].weather[0].icon
             var image = R.drawable.cloudy

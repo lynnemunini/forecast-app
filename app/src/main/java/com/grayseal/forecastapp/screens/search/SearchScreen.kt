@@ -94,7 +94,7 @@ fun SearchScreen(
                         textAlign = TextAlign.Center
                     )
                 }
-                SearchBar() { city ->
+                SearchBar { city ->
                     val connectivityManager =
                         context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                     val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo

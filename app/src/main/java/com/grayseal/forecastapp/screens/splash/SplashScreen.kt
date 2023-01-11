@@ -36,7 +36,7 @@ fun SplashScreen(navController: NavController) {
         navController.navigate(route = BottomNavItem.Home.route + "/$defaultCity")
     })
 
-    Surface() {
+    Surface {
         Column(
             modifier = Modifier
                 .fillMaxSize()
