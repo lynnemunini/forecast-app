@@ -88,33 +88,12 @@ fun NavBar(navController: NavController) {
                 selected = currentRoute == item.route,
                 selectedContentColor = Color.Transparent,
                 onClick = {
-                    if (item == BottomNavItem.Search) {
-                        navController.navigate(item.route) {
-                            launchSingleTop = true
-                        }
-                    } else {
-                        currentRoute = item.route
-                        if (item != BottomNavItem.Home) {
-                            if (item == BottomNavItem.Settings) {
-                                /*TODO(/*Not yet Implemented*/)*/
-                            } else {
-                                navController.navigate(item.route) {
-                                    // Pop up to the start destination of the graph to
-                                    // avoid building up a large stack of destinations
-                                    // on the back stack as users select items
-                                    navController.graph.startDestinationRoute?.let { route ->
-                                        popUpTo(route) {
-                                            saveState = true
-                                        }
-                                    }
-                                    // Avoid multiple copies of the same destination when re-selecting the same item
-                                    launchSingleTop = true
-                                    // Restore state when re-selecting a previously selected item
-                                    restoreState = true
-                                }
-                            }
+                    currentRoute = item.route
+                    if (item != BottomNavItem.Home) {
+                        if (item == BottomNavItem.Settings) {
+                            /*TODO(/*Not yet Implemented*/)*/
                         } else {
-                            navController.navigate(item.route + "/$defaultCity") {
+                            navController.navigate(item.route) {
                                 // Pop up to the start destination of the graph to
                                 // avoid building up a large stack of destinations
                                 // on the back stack as users select items
@@ -128,6 +107,21 @@ fun NavBar(navController: NavController) {
                                 // Restore state when re-selecting a previously selected item
                                 restoreState = true
                             }
+                        }
+                    } else {
+                        navController.navigate(item.route + "/$defaultCity") {
+                            // Pop up to the start destination of the graph to
+                            // avoid building up a large stack of destinations
+                            // on the back stack as users select items
+                            navController.graph.startDestinationRoute?.let { route ->
+                                popUpTo(route) {
+                                    saveState = true
+                                }
+                            }
+                            // Avoid multiple copies of the same destination when re-selecting the same item
+                            launchSingleTop = true
+                            // Restore state when re-selecting a previously selected item
+                            restoreState = true
                         }
                     }
                 }
