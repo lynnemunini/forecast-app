@@ -1,5 +1,5 @@
 # WEATHER FORECAST APP
-This is a weather forecast app that provides users with accurate and up-to-date weather information. The app retrieves data from OpenWeatherMap (One Call API) and allows users to search for the weather of a particular location, view the forecast report, utilize the current location to get weather forecast of that location, and save searched locations in local storage for later use.
+This is a weather forecast app that provides users with accurate and up-to-date weather information. The app retrieves data from OpenWeatherMap **(One Call API)** and allows users to search for the weather of a particular location, view the forecast report, utilize the current location to get weather forecast of that location, and save searched locations in local storage for later use.
 
 ## Technologies Used
 * **Jetpack Compose:** A modern UI toolkit for building native Android apps
@@ -11,7 +11,7 @@ This is a weather forecast app that provides users with accurate and up-to-date 
 * **Google Play's Location Library:** A library for retrieving the current location of the device
 
 ## Permissions
-The app requires the **"Access to Location"** permission in order to work. This permission is required to retrieve the current location of the device and get the weather forecast of that location. The app also requires an active internet connection to work and retrieve the weather data.
+The app requires the **"Access to Location"** permission in order to work. This permission is required to retrieve the current location of the device and get the weather forecast of that location.
 
 <img src = "images/permissions.png" alt = "Permissions and Network image">
 
