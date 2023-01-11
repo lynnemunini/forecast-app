@@ -13,23 +13,23 @@ This is a weather forecast app that provides users with accurate and up-to-date 
 ## Permissions
 The app requires the **"Access to Location"** permission in order to work. This permission is required to retrieve the current location of the device and get the weather forecast of that location. The app also requires an active internet connection to work and retrieve the weather data.
 
-<img src = "images/permissions.png" alt = "Permissions and Network image" width = "70%">
+<img src = "images/permissions.png" alt = "Permissions and Network image">
 
 The app also requires an active **internet** connection to work and retrieve the weather data.
 
-<img src = "images/network.png" alt = "Network image" width = "70%">
+<img src = "images/network.png" alt = "Network image">
 
 
 ## Features
 * Search for the weather for a particular location
 * Utilize user's current location to get weather forecast of that location
   
-   <img src = "images/weather.png" alt = "Current weather" width = "70%">
+   <img src = "images/weather.png" alt = "Current weather">
 
 * View the forecast report for a location
 * Save searched locations in local storage
   
-  <img src = "images/weather.png" alt = "Search and Forecast report image" width = "70%">
-  
+  <img src = "images/weather.png" alt = "Search and Forecast report image">
+
 ### Known Issues
 If the user clicks "Deny & Don't Ask Again" when prompted for the "Access to Location" permission, they will not be able to proceed further in the app and will need to restart the app to grant the permission.
