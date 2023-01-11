@@ -89,7 +89,7 @@ fun ForecastMainElements() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp, bottom = 20.dp),
+            .padding(top = 20.dp),
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
@@ -126,7 +126,7 @@ fun ForecastMainElements() {
 @Composable
 fun HourlyForecastData(data: Weather) {
 
-    LazyRow(modifier = Modifier.padding(2.dp)) {
+    LazyRow() {
         itemsIndexed(items = data.hourly) { index, item: Hourly ->
             val icon = data.hourly[index].weather[0].icon
             var image = R.drawable.cloudy
@@ -169,10 +169,10 @@ fun HourlyCard(image: Int, time: String, temperature: String) {
     Card(
         modifier = Modifier
             .width(180.dp)
+            .height(80.dp)
             .padding(start = 15.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = colors.secondary),
-        elevation = CardDefaults.cardElevation(500.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -260,11 +260,13 @@ fun DailyForecastData(data: Weather) {
             val unixTime = item.dt
             val instant = Instant.ofEpochSecond(unixTime.toLong())
             val zonedDateTime = instant.atZone(ZoneId.of("UTC"))
-            val dayOfWeek = zonedDateTime.dayOfWeek
-            val month = zonedDateTime.month
+            val dayOfWeek = zonedDateTime.dayOfWeek.name.lowercase()
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
+            val month = zonedDateTime.month.name.lowercase()
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
             val date = zonedDateTime.dayOfMonth
             val monthDate = "$month, $date"
-            DailyCard(day = dayOfWeek.toString(), date = monthDate, temperature = item.temp.day.toInt().toString(), image = image)
+            DailyCard(day = dayOfWeek, date = monthDate, temperature = item.temp.day.toInt().toString(), image = image)
         }
     }
 }
@@ -304,7 +306,7 @@ fun DailyCard(day: String, date: String, temperature: String, image: Int){
             ) {
                 Text(
                     text = "$temperature°",
-                    fontSize = 24.sp,
+                    fontSize = 26.sp,
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Medium,
                     color = Color.White
