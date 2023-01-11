@@ -3,6 +3,7 @@ package com.grayseal.forecastapp.screens.forecast
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -19,11 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.toLowerCase
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -166,13 +166,25 @@ fun HourlyForecastData(data: Weather) {
 
 @Composable
 fun HourlyCard(image: Int, time: String, temperature: String) {
+    var color = colors.primaryVariant
+    var tapped by remember {
+        mutableStateOf(false)
+    }
+    if (tapped) {
+        color = colors.secondary
+    }
     Card(
         modifier = Modifier
             .width(180.dp)
             .height(80.dp)
-            .padding(start = 15.dp),
+            .padding(start = 15.dp)
+            .pointerInput(Unit) {
+                detectTapGestures(
+                    onTap = { tapped = true }
+                )
+            },
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = colors.secondary),
+        colors = CardDefaults.cardColors(containerColor = color),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -266,16 +278,22 @@ fun DailyForecastData(data: Weather) {
                 .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }
             val date = zonedDateTime.dayOfMonth
             val monthDate = "$month, $date"
-            DailyCard(day = dayOfWeek, date = monthDate, temperature = item.temp.day.toInt().toString(), image = image)
+            DailyCard(
+                day = dayOfWeek,
+                date = monthDate,
+                temperature = item.temp.day.toInt().toString(),
+                image = image
+            )
         }
     }
 }
 
 @Composable
-fun DailyCard(day: String, date: String, temperature: String, image: Int){
+fun DailyCard(day: String, date: String, temperature: String, image: Int) {
     Card(
         modifier = Modifier
-            .fillMaxWidth().height(100.dp)
+            .fillMaxWidth()
+            .height(100.dp)
             .padding(bottom = 15.dp),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(containerColor = colors.primaryVariant),
@@ -290,7 +308,14 @@ fun DailyCard(day: String, date: String, temperature: String, image: Int){
                 modifier = Modifier.padding(start = 10.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = day, fontSize = 16.sp, fontFamily = poppinsFamily, fontWeight = FontWeight.Bold, color = Color.White, textAlign = TextAlign.Start)
+                Text(
+                    text = day,
+                    fontSize = 16.sp,
+                    fontFamily = poppinsFamily,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Start
+                )
                 Text(
                     text = date,
                     fontSize = 12.sp,
