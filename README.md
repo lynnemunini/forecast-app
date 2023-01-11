@@ -1,5 +1,5 @@
 # WEATHER FORECAST APP
-This is a weather forecast app that provides users with accurate and up-to-date weather information. The app retrieves data from the OpenWeatherMap API and allows users to search for the weather of a particular location, view the forecast report, utilize the current location to get weather forecast of that location, and save searched locations in local storage for later use.
+This is a weather forecast app that provides users with accurate and up-to-date weather information. The app retrieves data from OpenWeatherMap (One Call API) and allows users to search for the weather of a particular location, view the forecast report, utilize the current location to get weather forecast of that location, and save searched locations in local storage for later use.
 
 ## Technologies Used
 * **Jetpack Compose:** A modern UI toolkit for building native Android apps
