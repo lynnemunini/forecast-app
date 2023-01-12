@@ -14,28 +14,23 @@ This is a weather forecast app that provides users with accurate and up-to-date 
 The app requires the **"Access to Location"** permission in order to work. This permission is required to retrieve the current location of the device and get the weather forecast of that location.
 
 
-<img src = "images/permissions.png" alt = "Permissions and Network image">
-
+<img src = "images/1.png" alt = "Permissions">
 
 The app also requires an active **internet** connection to work and retrieve the weather data.
-
-
-<img src = "images/network.png" alt = "Network image">
-
+<img src = "images/2.png" alt = " Network">
 
 ## Features
 * Search for the weather for a particular location
 * Utilize user's current location to get weather forecast of that location
   
-
-   <img src = "images/weather.png" alt = "Current weather">
+<img src = "images/3.png" alt = "Weather">
 
 
 * View the forecast report for a location
 * Save searched locations in local storage
   
 
-  <img src = "images/search.png" alt = "Search and Forecast report image">
+  <img src = "images/4.png" alt = "Search and Forecast report image">
 
 
 ### Known Issues
