@@ -17,6 +17,7 @@ The app requires the **"Access to Location"** permission in order to work. This 
 <img src = "images/1.png" alt = "Permissions">
 
 The app also requires an active **internet** connection to work and retrieve the weather data.
+
 <img src = "images/2.png" alt = " Network">
 
 ## Features
@@ -25,13 +26,9 @@ The app also requires an active **internet** connection to work and retrieve the
   
 <img src = "images/3.png" alt = "Weather">
 
-
 * View the forecast report for a location
-* Save searched locations in local storage
-  
+* Save searched locations in local storage for later use  
 
   <img src = "images/4.png" alt = "Search and Forecast report image">
-
-
 ### Known Issues
 If the user clicks "Deny & Don't Ask Again" when prompted for the "Access to Location" permission, they will not be able to proceed further in the app and will need to restart the app to grant the permission.
