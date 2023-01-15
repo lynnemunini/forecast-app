@@ -319,6 +319,7 @@ fun favCard(
                 val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
                 val isConnected: Boolean = activeNetwork?.isConnected == true
                 if (isConnected) {
+                    navController.popBackStack()
                     navController.navigate(BottomNavItem.Home.route + "/${favourite.city}")
                 } else {
                     Toast
@@ -408,7 +409,6 @@ fun favCard(
                         modifier = Modifier.clickable {
                             favouriteViewModel.deleteFavourite(favourite)
                         })
-
                 }
             }
         }
