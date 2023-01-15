@@ -33,6 +33,7 @@ fun SplashScreen(navController: NavController) {
             OvershootInterpolator(4f).getInterpolation(it)
         }))
         delay(1000L)
+        navController.popBackStack()
         navController.navigate(route = BottomNavItem.Home.route + "/$defaultCity")
     })
 
