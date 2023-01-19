@@ -246,7 +246,8 @@ fun ShowData(
             Column(
                 modifier = Modifier
                     .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
                 val icon = weatherData.data!!.current.weather[0].icon
                 var image = R.drawable.sun_cloudy

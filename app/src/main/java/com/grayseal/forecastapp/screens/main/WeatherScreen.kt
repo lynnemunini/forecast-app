@@ -119,7 +119,7 @@ fun WeatherScreen(
         Scaffold(content = { padding ->
             Column(
                 modifier = Modifier
-                    .padding(padding),
+                    .padding(padding)
             ) {
                 HomeElements(
                     mainViewModel = mainViewModel,
