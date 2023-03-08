@@ -157,7 +157,7 @@ fun GetCurrentLocation(
                     "the app's functionalities.",
             enableLocation,
             {
-                
+
             }
         )
     }
