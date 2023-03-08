@@ -1,4 +1,5 @@
 import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
@@ -6,6 +7,11 @@ import android.location.Geocoder
 import android.location.Location
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -21,6 +27,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -32,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
@@ -44,6 +53,8 @@ import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.screens.forecast.ForecastViewModel
 import com.grayseal.forecastapp.screens.main.MainViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
+import com.grayseal.forecastapp.utils.createLocationRequest
+import com.grayseal.forecastapp.utils.fetchLastLocation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -57,57 +68,139 @@ fun GetCurrentLocation(
     latitude: MutableState<Double>,
     longitude: MutableState<Double>,
 ) {
-    val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    // To create an instance of the fused Location Provider Client
-    val fusedLocationClient: FusedLocationProviderClient =
-        LocationServices.getFusedLocationProviderClient(context)
+    var locationFromGps: Location? by remember { mutableStateOf(null) }
+    var openDialog: String by remember { mutableStateOf("") }
 
-    HandleRequest(
-        permissionState = permissionState,
-        deniedContent = { shouldShowRationale ->
-            PermissionDeniedContent(
-                rationaleMessage = "We apologize for the inconvenience, but unfortunately this " +
-                        "permission is required to use the app",
-                shouldShowRationale = shouldShowRationale
-            ) { permissionState.launchPermissionRequest() }
-        },
-        content = {
-            // Check to see if permission is available
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                try {
-                    val locationResult = fusedLocationClient.getCurrentLocation(
-                        Priority.PRIORITY_HIGH_ACCURACY,
-                        CancellationTokenSource().token
+
+    val locationPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        )
+    )
+
+    val context = LocalContext.current
+    val fusedLocationProviderClient =
+        remember { LocationServices.getFusedLocationProviderClient(context) }
+    val locationCallback = remember {
+        object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationFromGps = locationResult.lastLocation
+            }
+        }
+    }
+
+
+    val settingsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = {
+            when (it.resultCode) {
+                Activity.RESULT_OK -> {
+                    context.fetchLastLocation(
+                        fusedLocationClient = fusedLocationProviderClient,
+                        settingsLauncher = null,
+                        location = {
+                            if (locationFromGps == null && locationFromGps != it) {
+                                locationFromGps = it
+                            }
+                        },
+                        locationCallback = locationCallback
                     )
-
-                    locationResult.addOnSuccessListener { location: Location? ->
-                        // Get location. In some rare situations this can be null.
-                        if (location != null) {
-                            latitude.value = location.latitude
-                            longitude.value = location.longitude
-                        }
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(context, "Error Fetching Location", Toast.LENGTH_LONG).show()
+                }
+                Activity.RESULT_CANCELED -> {
+                    Toast.makeText(context, "Activity.RESULT_CANCELED", Toast.LENGTH_LONG).show()
                 }
             }
-            ShowData(
-                mainViewModel = mainViewModel,
-                forecastViewModel = forecastViewModel,
-                latitude = latitude.value,
-                longitude = longitude.value
-            )
         }
     )
+
+    LaunchedEffect(
+        key1 = locationPermissionsState.revokedPermissions.size,
+        key2 = locationPermissionsState.shouldShowRationale,
+        block = {
+            fetchLocation(
+                locationPermissionsState,
+                context,
+                settingsLauncher,
+                fusedLocationProviderClient,
+                locationCallback,
+                openDialog = {
+                    openDialog = it
+                })
+        })
+
+    LaunchedEffect(
+        key1 = locationFromGps,
+        block = {
+            // TODO: setup GeoCoder
+
+        }
+    )
+
+    DisposableEffect(
+        key1 = true
+    ) {
+        onDispose {
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        }
+    }
+
+    if (openDialog.isNotEmpty()) {
+        val enableLocation = remember { mutableStateOf(true) }
+        CustomDialog(
+            title = "Turn On Location Service",
+            desc = "We understand that privacy is important and we only request access to " +
+                    "your location for the purpose of providing you with accurate and relevant " +
+                    "weather information.\n\n" +
+                    "Unfortunately, without this permission you will not be able to utilize " +
+                    "the app's functionalities.",
+            enableLocation,
+            {
+                
+            }
+        )
+    }
+
+
+
+    ShowData(
+        mainViewModel = mainViewModel,
+        forecastViewModel = forecastViewModel,
+        latitude = latitude.value,
+        longitude = longitude.value,
+        locationFromGps = locationFromGps,
+    )
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+private fun fetchLocation(
+    locationPermissionsState: MultiplePermissionsState,
+    context: Context,
+    settingsLauncher: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>,
+    fusedLocationProviderClient: FusedLocationProviderClient,
+    locationCallback: LocationCallback,
+    openDialog: (String) -> Unit
+) {
+    when {
+        locationPermissionsState.revokedPermissions.size <= 1 -> {
+            // Has permission at least one permission [coarse or fine]
+            context.createLocationRequest(
+                settingsLauncher = settingsLauncher,
+                fusedLocationClient = fusedLocationProviderClient,
+                locationCallback = locationCallback
+            )
+        }
+        locationPermissionsState.shouldShowRationale -> {
+            openDialog("Should show rationale")
+        }
+        locationPermissionsState.revokedPermissions.size == 2 -> {
+            locationPermissionsState.launchMultiplePermissionRequest()
+        }
+        else -> {
+            openDialog("This app requires location permission")
+        }
+    }
 }
 
 @ExperimentalPermissionsApi
@@ -208,17 +301,22 @@ fun PermissionDeniedContent(
 fun ShowData(
     mainViewModel: MainViewModel,
     forecastViewModel: ForecastViewModel,
+    locationFromGps:Location?,
     latitude: Double,
     longitude: Double
 ) {
+
+
     val gson = Gson()
-    if (latitude != 360.0 && longitude != 360.0) {
+    if (locationFromGps?.latitude != 360.0 && locationFromGps?.longitude != 360.0) {
         // Latitude and longitude are valid, so continue as normal
         val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
             initialValue = DataOrException(loading = true)
         ) {
-            Log.d("Lat $ Lon", "$latitude and $longitude")
-            value = mainViewModel.getWeatherData(latitude, longitude)
+            Log.d("Lat $ Lon", "${locationFromGps?.latitude} and ${locationFromGps?.longitude}")
+            if (locationFromGps != null) {
+                value = mainViewModel.getWeatherData(locationFromGps.latitude, locationFromGps.longitude)
+            }
         }.value
 
 

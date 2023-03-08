@@ -56,7 +56,8 @@ fun WeatherScreen(
         longitude = remember {
             mutableStateOf(360.0)
         }
-    } else {
+    }
+    else {
         val address = city?.let { getLatLon(context, it) }
         if (address != null) {
             latitude = remember {
@@ -65,7 +66,8 @@ fun WeatherScreen(
             longitude = remember {
                 mutableStateOf(address.longitude)
             }
-        } else {
+        }
+        else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
