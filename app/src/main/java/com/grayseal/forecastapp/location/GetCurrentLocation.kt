@@ -1,16 +1,27 @@
 import android.Manifest
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,6 +32,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -29,13 +41,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.*
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.gson.Gson
+import com.grayseal.forecastapp.BuildConfig
 import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.data.DataOrException
 import com.grayseal.forecastapp.location.CustomDialog
@@ -44,6 +61,9 @@ import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.screens.forecast.ForecastViewModel
 import com.grayseal.forecastapp.screens.main.MainViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
+import com.grayseal.forecastapp.utils.RequestLocationPermission
+import com.grayseal.forecastapp.utils.createLocationRequest
+import com.grayseal.forecastapp.utils.fetchLastLocation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -57,150 +77,207 @@ fun GetCurrentLocation(
     latitude: MutableState<Double>,
     longitude: MutableState<Double>,
 ) {
-    val permissionState = rememberPermissionState(Manifest.permission.ACCESS_FINE_LOCATION)
-
-    // To create an instance of the fused Location Provider Client
     val fusedLocationClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
-    HandleRequest(
-        permissionState = permissionState,
-        deniedContent = { shouldShowRationale ->
-            PermissionDeniedContent(
-                rationaleMessage = "We apologize for the inconvenience, but unfortunately this " +
-                        "permission is required to use the app",
-                shouldShowRationale = shouldShowRationale
-            ) { permissionState.launchPermissionRequest() }
-        },
-        content = {
-            // Check to see if permission is available
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(
-                    context,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                try {
-                    val locationResult = fusedLocationClient.getCurrentLocation(
-                        Priority.PRIORITY_HIGH_ACCURACY,
-                        CancellationTokenSource().token
-                    )
 
-                    locationResult.addOnSuccessListener { location: Location? ->
-                        // Get location. In some rare situations this can be null.
-                        if (location != null) {
-                            latitude.value = location.latitude
-                            longitude.value = location.longitude
-                        }
-                    }
-                } catch (e: Exception) {
-                    Toast.makeText(context, "Error Fetching Location", Toast.LENGTH_LONG).show()
+    var locationFromGps: Location? by remember { mutableStateOf(null) }
+    var openDialog: String by remember { mutableStateOf("") }
+
+    val locationPermissionsState = rememberMultiplePermissionsState(
+        listOf(
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+        )
+    )
+
+    val context = LocalContext.current
+    val fusedLocationProviderClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val locationCallback = remember {
+        object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                Log.d("onLocationResult", "locationResult.latitude: ${locationResult.lastLocation?.latitude}")
+                locationFromGps = locationResult.lastLocation
+            }
+        }
+    }
+
+
+    val settingsLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult(),
+        onResult = {
+            when (it.resultCode) {
+                Activity.RESULT_OK -> {
+                    context.fetchLastLocation(
+                        fusedLocationClient = fusedLocationProviderClient,
+                        settingsLauncher = null,
+                        location = {
+                            Log.d("settingsLauncher", "location: ${it.latitude}")
+                            if (locationFromGps == null && locationFromGps != it) {
+                                locationFromGps = it
+                            }
+                        },
+                        locationCallback = locationCallback
+                    )
+                }
+                Activity.RESULT_CANCELED -> {
+                    Toast.makeText(context, "Activity.RESULT_CANCELED", Toast.LENGTH_LONG).show()
                 }
             }
-            ShowData(
-                mainViewModel = mainViewModel,
-                forecastViewModel = forecastViewModel,
-                latitude = latitude.value,
-                longitude = longitude.value
-            )
         }
     )
-}
 
-@ExperimentalPermissionsApi
-@Composable
-fun HandleRequest(
-    permissionState: PermissionState,
-    deniedContent: @Composable (Boolean) -> Unit,
-    content: @Composable () -> Unit
-) {
-    when (permissionState.status) {
-        is PermissionStatus.Granted -> {
-            content()
+    LaunchedEffect(
+        key1 = locationPermissionsState.revokedPermissions.size,
+        key2 = locationPermissionsState.shouldShowRationale,
+        block = {
+            fetchLocation(
+                locationPermissionsState,
+                context,
+                settingsLauncher,
+                fusedLocationProviderClient,
+                locationCallback,
+                openDialog = {
+                    openDialog = it
+                })
+        })
+
+    LaunchedEffect(
+        key1 = locationFromGps,
+        block = {
+            Log.d("LaunchedEffect", "locationFromGps: $locationFromGps")
+            // TODO: setup GeoCoder
+
         }
-        is PermissionStatus.Denied -> {
-            deniedContent(permissionState.status.shouldShowRationale)
+    )
+
+    DisposableEffect(
+        key1 = true
+    ) {
+        onDispose {
+            fusedLocationProviderClient.removeLocationUpdates(locationCallback)
         }
     }
-}
 
-@Composable
-fun Content(showButton: Boolean = true, onClick: () -> Unit) {
-    if (showButton) {
-        val enableLocation = remember { mutableStateOf(true) }
-        if (enableLocation.value) {
-            CustomDialog(
-                title = "Turn On Location Service",
-                desc = "We understand that privacy is important and we only request access to " +
-                        "your location for the purpose of providing you with accurate and relevant " +
-                        "weather information.\n\n" +
-                        "Unfortunately, without this permission you will not be able to utilize " +
-                        "the app's functionalities.",
-                enableLocation,
-                onClick
+    RequestLocationPermission(permission = Manifest.permission.ACCESS_FINE_LOCATION){
+
+        if (
+            locationPermissionsState.revokedPermissions.size == 2
+            && !locationPermissionsState.shouldShowRationale
+        ) {
+            openDialog = "Permission fully denied. Go to settings to enable"
+            Log.d("LaunchedEffect", "revokedPermissions.size == 2 && shouldShowRationale")
+        } else {
+            fetchLocation(
+                locationPermissionsState,
+                context,
+                settingsLauncher,
+                fusedLocationProviderClient,
+                locationCallback,
+                openDialog = {
+                    openDialog = it
+                }
             )
         }
+        locationFromGps?.latitude?.let {
+            locationFromGps?.longitude?.let { it1 ->
+                ShowData(
+                    mainViewModel = mainViewModel,
+                    forecastViewModel = forecastViewModel,
+                    latitude = it,
+                    longitude = it1
+                )
+            }
+        }
+
+        if (openDialog.isNotEmpty()) {
+            Dialog(
+                onDismissRequest = { openDialog = "" },
+                properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            ) {
+                NoPermissionDialog(
+                    message = openDialog,
+                    reqPermission = {
+                        locationPermissionsState.launchMultiplePermissionRequest()
+                        openDialog = ""
+                    }
+                )
+            }
+        }
     }
 }
 
-@ExperimentalPermissionsApi
-@Composable
-fun PermissionDeniedContent(
-    rationaleMessage: String,
-    shouldShowRationale: Boolean,
-    onRequestPermission: () -> Unit
+@OptIn(ExperimentalPermissionsApi::class)
+private fun fetchLocation(
+    locationPermissionsState: MultiplePermissionsState,
+    context: Context,
+    settingsLauncher: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>,
+    fusedLocationProviderClient: FusedLocationProviderClient,
+    locationCallback: LocationCallback,
+    openDialog: (String) -> Unit
 ) {
+    when {
+        locationPermissionsState.revokedPermissions.size <= 1 -> {
+            // Has permission at least one permission [coarse or fine]
+            context.createLocationRequest(
+                settingsLauncher = settingsLauncher,
+                fusedLocationClient = fusedLocationProviderClient,
+                locationCallback = locationCallback
+            )
+            Log.d("LaunchedEffect", "revokedPermissions.size <= 1")
+        }
+        locationPermissionsState.shouldShowRationale -> {
+            openDialog("Should show rationale")
+            Log.d("LaunchedEffect", "shouldShowRationale")
+        }
+        locationPermissionsState.revokedPermissions.size == 2 -> {
+            locationPermissionsState.launchMultiplePermissionRequest()
+            Log.d("LaunchedEffect", "revokedPermissions.size == 2")
+        }
+        else -> {
+            openDialog("This app requires location permission")
+            Log.d("LaunchedEffect", "else")
+        }
+    }
+}
 
-    if (shouldShowRationale) {
+@Composable
+fun NoPermissionDialog(reqPermission: () -> Unit, message: String) {
+    Card(
+        shape = RoundedCornerShape(10.dp),
+        modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 10.dp),
+        elevation = 8.dp
+    ) {
+        val context = LocalContext.current
 
-        AlertDialog(
-            onDismissRequest = {},
-            title = {
-                Text(
-                    text = "Location Permission Request",
-                    textAlign = TextAlign.Center,
-                    style = androidx.compose.material3.MaterialTheme.typography.titleLarge,
-                    color = Color(0xFF23224a),
-                    fontWeight = FontWeight.Bold
-                )
-            },
-            text = {
-                Text(
-                    rationaleMessage,
-                    modifier = Modifier
-                        .padding(top = 10.dp)
-                        .fillMaxWidth(),
-                    letterSpacing = 0.5.sp,
-                    style = androidx.compose.material3.MaterialTheme.typography.bodyLarge,
-                    color = Color(0xFF23224a), textAlign = TextAlign.Justify
-                )
-            },
-            confirmButton = {
-                androidx.compose.material3.Button(
-                    onClick = onRequestPermission,
-                    modifier = Modifier
-                        .padding(bottom = 10.dp)
-                        .background(
-                            brush = Brush.horizontalGradient(
-                                colors = listOf(
-                                    Color(0xFF0b123a),
-                                    Color(0xFF2596be)
+        Column(
+            Modifier.padding(16.dp)
+        ) {
+            Text(text = message)
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.align(Alignment.End)) {
+
+                Button(onClick = {
+                    if (message == "Permission fully denied. Go to settings to enable") {
+                        try {
+                            context.startActivity(
+                                Intent(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
                                 )
-                            ),
-                            shape = RoundedCornerShape(16.dp)
-                        ),
-                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color.Transparent),
-                ) {
-                    Text("Give Permission", color = Color.White)
+                            )
+                        } catch (e: Exception) {
+                            Log.e("NoPermissionDialog", "e:: $e")
+                        }
+                    } else {
+                        reqPermission()
+                    }
+                }) {
+                    Text(text = if (message == "Permission fully denied. Go to settings to enable") "Go to settings" else "Allow")
                 }
-            },
-        )
 
-    } else {
-        Content(onClick = onRequestPermission)
+            }
+        }
     }
 }
 
