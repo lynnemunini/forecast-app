@@ -159,127 +159,50 @@ fun GetCurrentLocation(
         }
     }
 
-    RequestLocationPermission(permission = Manifest.permission.ACCESS_FINE_LOCATION){
+    RequestLocationPermission(
+        permission = Manifest.permission.ACCESS_FINE_LOCATION){
 
-        if (
-            locationPermissionsState.revokedPermissions.size == 2
-            && !locationPermissionsState.shouldShowRationale
-        ) {
-            openDialog = "Permission fully denied. Go to settings to enable"
-            Log.d("LaunchedEffect", "revokedPermissions.size == 2 && shouldShowRationale")
-        } else {
-            fetchLocation(
-                locationPermissionsState,
+        if (ContextCompat.checkSelfPermission(
                 context,
-                settingsLauncher,
-                fusedLocationProviderClient,
-                locationCallback,
-                openDialog = {
-                    openDialog = it
-                }
-            )
-        }
-        locationFromGps?.latitude?.let {
-            locationFromGps?.longitude?.let { it1 ->
-                ShowData(
-                    mainViewModel = mainViewModel,
-                    forecastViewModel = forecastViewModel,
-                    latitude = it,
-                    longitude = it1
-                )
-            }
-        }
-
-        if (openDialog.isNotEmpty()) {
-            Dialog(
-                onDismissRequest = { openDialog = "" },
-                properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-            ) {
-                NoPermissionDialog(
-                    message = openDialog,
-                    reqPermission = {
-                        locationPermissionsState.launchMultiplePermissionRequest()
-                        openDialog = ""
-                    }
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-private fun fetchLocation(
-    locationPermissionsState: MultiplePermissionsState,
-    context: Context,
-    settingsLauncher: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>,
-    fusedLocationProviderClient: FusedLocationProviderClient,
-    locationCallback: LocationCallback,
-    openDialog: (String) -> Unit
-) {
-    when {
-        locationPermissionsState.revokedPermissions.size <= 1 -> {
-            // Has permission at least one permission [coarse or fine]
-            context.createLocationRequest(
-                settingsLauncher = settingsLauncher,
-                fusedLocationClient = fusedLocationProviderClient,
-                locationCallback = locationCallback
-            )
-            Log.d("LaunchedEffect", "revokedPermissions.size <= 1")
-        }
-        locationPermissionsState.shouldShowRationale -> {
-            openDialog("Should show rationale")
-            Log.d("LaunchedEffect", "shouldShowRationale")
-        }
-        locationPermissionsState.revokedPermissions.size == 2 -> {
-            locationPermissionsState.launchMultiplePermissionRequest()
-            Log.d("LaunchedEffect", "revokedPermissions.size == 2")
-        }
-        else -> {
-            openDialog("This app requires location permission")
-            Log.d("LaunchedEffect", "else")
-        }
-    }
-}
-
-@Composable
-fun NoPermissionDialog(reqPermission: () -> Unit, message: String) {
-    Card(
-        shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.padding(10.dp, 5.dp, 10.dp, 10.dp),
-        elevation = 8.dp
-    ) {
-        val context = LocalContext.current
-
-        Column(
-            Modifier.padding(16.dp)
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED ||
+            ContextCompat.checkSelfPermission(
+                context,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
         ) {
-            Text(text = message)
-            Spacer(modifier = Modifier.height(24.dp))
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.align(Alignment.End)) {
+            try {
+                val locationResult = fusedLocationClient.getCurrentLocation(
+                    Priority.PRIORITY_HIGH_ACCURACY,
+                    CancellationTokenSource().token
+                )
 
-                Button(onClick = {
-                    if (message == "Permission fully denied. Go to settings to enable") {
-                        try {
-                            context.startActivity(
-                                Intent(
-                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                                )
-                            )
-                        } catch (e: Exception) {
-                            Log.e("NoPermissionDialog", "e:: $e")
-                        }
-                    } else {
-                        reqPermission()
+                locationResult.addOnSuccessListener { location: Location? ->
+                    // Get location. In some rare situations this can be null.
+                    if (location != null) {
+                        latitude.value = location.latitude
+                        longitude.value = location.longitude
                     }
-                }) {
-                    Text(text = if (message == "Permission fully denied. Go to settings to enable") "Go to settings" else "Allow")
                 }
-
+            } catch (e: Exception) {
+                Toast.makeText(context, "Error Fetching Location", Toast.LENGTH_LONG).show()
             }
+        } else {
+            Toast.makeText(context, "Please Enable Location", Toast.LENGTH_LONG).show()
         }
+
     }
+
+    ShowData(
+        mainViewModel = mainViewModel,
+        forecastViewModel = forecastViewModel,
+        latitude = latitude.value,
+        longitude = longitude.value
+    )
 }
+
+
+
 
 @Composable
 fun ShowData(
@@ -526,5 +449,39 @@ suspend fun getLocationName(
             locationName = address.adminArea
         }
         locationName
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+private fun fetchLocation(
+    locationPermissionsState: MultiplePermissionsState,
+    context: Context,
+    settingsLauncher: ManagedActivityResultLauncher<IntentSenderRequest, ActivityResult>,
+    fusedLocationProviderClient: FusedLocationProviderClient,
+    locationCallback: LocationCallback,
+    openDialog: (String) -> Unit
+) {
+    when {
+        locationPermissionsState.revokedPermissions.size <= 1 -> {
+            // Has permission at least one permission [coarse or fine]
+            context.createLocationRequest(
+                settingsLauncher = settingsLauncher,
+                fusedLocationClient = fusedLocationProviderClient,
+                locationCallback = locationCallback
+            )
+            Log.d("LaunchedEffect", "revokedPermissions.size <= 1")
+        }
+        locationPermissionsState.shouldShowRationale -> {
+            openDialog("Should show rationale")
+            Log.d("LaunchedEffect", "shouldShowRationale")
+        }
+        locationPermissionsState.revokedPermissions.size == 2 -> {
+            locationPermissionsState.launchMultiplePermissionRequest()
+            Log.d("LaunchedEffect", "revokedPermissions.size == 2")
+        }
+        else -> {
+            openDialog("This app requires location permission")
+            Log.d("LaunchedEffect", "else")
+        }
     }
 }
