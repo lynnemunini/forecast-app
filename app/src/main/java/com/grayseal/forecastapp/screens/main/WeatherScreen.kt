@@ -20,12 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.screens.forecast.ForecastViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
 import com.grayseal.forecastapp.widgets.BottomNavItem
@@ -74,8 +76,7 @@ fun WeatherScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Sorry, it looks like the area you have tried searching for is unknown." +
-                            " Please try again by searching for a more known name of the location.",
+                    text = stringResource(R.string.unknown_search),
                     fontFamily = poppinsFamily,
                     fontSize = 16.sp,
                     color = Color.White,
