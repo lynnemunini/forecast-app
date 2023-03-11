@@ -93,7 +93,7 @@ fun WeatherScreen(
                     elevation = ButtonDefaults.buttonElevation(4.dp)
                 ) {
                     Text(
-                        "Try Again",
+                        stringResource(R.string.try_again),
                         fontFamily = poppinsFamily,
                         fontWeight = FontWeight.Medium,
                         color = Color.White
