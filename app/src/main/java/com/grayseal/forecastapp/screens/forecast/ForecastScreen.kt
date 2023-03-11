@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -93,7 +94,7 @@ fun ForecastMainElements() {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            "Forecast Report",
+            stringResource(R.string.forecast_report),
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = poppinsFamily

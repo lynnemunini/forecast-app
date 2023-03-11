@@ -11,4 +11,5 @@
     <string name="no_favourite">No favourite location added yet!</string>
     <string name="weather_icon">WeatherIcon</string>
     <string name="deleted_favourite">Delete Favourite</string>
+    <string name="forecast_report">Forecast Report</string>
 </resources>
