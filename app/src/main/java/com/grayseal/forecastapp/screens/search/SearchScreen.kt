@@ -103,17 +103,21 @@ fun SearchScreen(
                     val activeNetwork: NetworkInfo? = connectivityManager.activeNetworkInfo
                     val isConnected: Boolean = activeNetwork?.isConnected == true
                     if (isConnected) {
+                        // Navigate to HomeScreen
+                        navController.navigate(BottomNavItem.Home.route + "/$city")
                         val address = getLatLon(context, city)
-                        val latitude = address!!.latitude
-                        val longitude = address.longitude
-                        // Insert record to database
-                        favouriteViewModel.insertFavourite(
-                            Favourite(
-                                city = city,
-                                lat = latitude,
-                                lon = longitude
+                        val latitude = address?.latitude
+                        val longitude = address?.longitude
+                        if(latitude != null || longitude != null) {
+                            // Insert record to database
+                            favouriteViewModel.insertFavourite(
+                                Favourite(
+                                    city = city,
+                                    lat = latitude!!,
+                                    lon = longitude!!,
+                                )
                             )
-                        )
+                        }
                     } else {
                         Toast.makeText(context, "No internet connection!", Toast.LENGTH_LONG).show()
                     }
@@ -121,43 +125,42 @@ fun SearchScreen(
                 }
                 Log.d("TAG", "$list")
                 list = list.reversed()
-               Box(
-                   modifier = Modifier
-                       .fillMaxSize()
-               ) {
-                   if(list.isEmpty()){
-                       Text(
-                           text = stringResource(R.string.no_favourite),
-                           fontSize = 14.sp,
-                           fontWeight = FontWeight.Bold,
-                           fontFamily = poppinsFamily,
-                           textAlign = TextAlign.Center,
-                           modifier = Modifier
-                               .fillMaxWidth()
-                               .padding(top = 20.dp)
-                       )
-                   }
-                    else{
-                       LazyVerticalGrid(
-                           columns = GridCells.Fixed(2),
-                           contentPadding = PaddingValues(16.dp),
-                           modifier = Modifier
-                               .fillMaxWidth(),
-                           horizontalArrangement = Arrangement.spacedBy(8.dp),
-                       ) {
-                           items(list.size) { index ->
-                               favCard(
-                                   index = index,
-                                   favourite = list[index],
-                                   context = context,
-                                   navController = navController,
-                                   mainViewModel = mainViewModel,
-                                   favouriteViewModel = favouriteViewModel
-                               )
-                           }
-                       }
-                   }
-               }
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                ) {
+                    if (list.isEmpty()) {
+                        Text(
+                            text = stringResource(R.string.no_favourite),
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Bold,
+                            fontFamily = poppinsFamily,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 20.dp)
+                        )
+                    } else {
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            contentPadding = PaddingValues(16.dp),
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            items(list.size) { index ->
+                                FavCard(
+                                    index = index,
+                                    favourite = list[index],
+                                    context = context,
+                                    navController = navController,
+                                    mainViewModel = mainViewModel,
+                                    favouriteViewModel = favouriteViewModel
+                                )
+                            }
+                        }
+                    }
+                }
 
             }
         }, bottomBar = {
@@ -197,7 +200,7 @@ fun SearchBar(onSearch: (String) -> Unit = {}) {
 }
 
 @Composable
-fun favCard(
+fun FavCard(
     index: Int,
     favourite: Favourite,
     context: Context,

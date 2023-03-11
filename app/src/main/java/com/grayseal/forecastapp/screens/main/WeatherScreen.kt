@@ -8,21 +8,18 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -30,7 +27,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.screens.forecast.ForecastViewModel
 import com.grayseal.forecastapp.ui.theme.poppinsFamily
-import com.grayseal.forecastapp.widgets.BottomNavItem
 import com.grayseal.forecastapp.widgets.NavBar
 import getLocationName
 import kotlinx.coroutines.Dispatchers
@@ -58,8 +54,7 @@ fun WeatherScreen(
         longitude = remember {
             mutableStateOf(360.0)
         }
-    }
-    else {
+    } else {
         val address = city?.let { getLatLon(context, it) }
         if (address != null) {
             latitude = remember {
@@ -68,9 +63,15 @@ fun WeatherScreen(
             longitude = remember {
                 mutableStateOf(address.longitude)
             }
-        }
-        else {
-            Column(
+        } else {
+            latitude = remember {
+                mutableStateOf(360.0)
+            }
+            longitude = remember {
+                mutableStateOf(360.0)
+            }
+            Toast.makeText(context, "Unknown Location", Toast.LENGTH_LONG).show()
+            /*Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(start = 15.dp, end = 15.dp),
@@ -102,11 +103,9 @@ fun WeatherScreen(
                     )
 
                 }
-            }
+            }*/
         }
     }
-
-
     val gradientColors = listOf(Color(0xFF060620), colors.primary)
     Box(
         modifier = Modifier
@@ -228,10 +227,9 @@ fun getLatLon(context: Context, cityName: String): Address? {
         val addresses = geocoder.getFromLocationName(cityName, 1)
         addresses!![0]
     } catch (e: Exception) {
-        Toast.makeText(context, "Unknown Location", Toast.LENGTH_SHORT).show()
+        // Toast.makeText(context, "Unknown Location", Toast.LENGTH_SHORT).show()
         null
     }
-
 }
 
 

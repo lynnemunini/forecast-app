@@ -1,13 +1,10 @@
 import android.Manifest
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
-import android.net.Uri
-import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
@@ -18,10 +15,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.AlertDialog
-import androidx.compose.material.Button
-import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.Text
 import androidx.compose.material3.CircularProgressIndicator
@@ -37,25 +30,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import com.google.accompanist.permissions.*
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.Priority
+import com.google.android.gms.location.*
 import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.gson.Gson
-import com.grayseal.forecastapp.BuildConfig
 import com.grayseal.forecastapp.R
 import com.grayseal.forecastapp.data.DataOrException
-import com.grayseal.forecastapp.location.CustomDialog
 import com.grayseal.forecastapp.model.CurrentWeatherObject
 import com.grayseal.forecastapp.model.Weather
 import com.grayseal.forecastapp.screens.forecast.ForecastViewModel
@@ -92,11 +76,15 @@ fun GetCurrentLocation(
     )
 
     val context = LocalContext.current
-    val fusedLocationProviderClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val fusedLocationProviderClient =
+        remember { LocationServices.getFusedLocationProviderClient(context) }
     val locationCallback = remember {
         object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                Log.d("onLocationResult", "locationResult.latitude: ${locationResult.lastLocation?.latitude}")
+                Log.d(
+                    "onLocationResult",
+                    "locationResult.latitude: ${locationResult.lastLocation?.latitude}"
+                )
                 locationFromGps = locationResult.lastLocation
             }
         }
@@ -160,7 +148,8 @@ fun GetCurrentLocation(
     }
 
     RequestLocationPermission(
-        permission = Manifest.permission.ACCESS_FINE_LOCATION){
+        permission = Manifest.permission.ACCESS_FINE_LOCATION
+    ) {
 
         if (ContextCompat.checkSelfPermission(
                 context,
@@ -192,7 +181,6 @@ fun GetCurrentLocation(
         }
 
     }
-
     ShowData(
         mainViewModel = mainViewModel,
         forecastViewModel = forecastViewModel,
@@ -200,8 +188,6 @@ fun GetCurrentLocation(
         longitude = longitude.value
     )
 }
-
-
 
 
 @Composable
