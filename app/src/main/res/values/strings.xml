@@ -4,4 +4,5 @@
                             " Please try again by searching for a more known name of the location.",</string>
     <string name="try_again">"Try Again"</string>
     <string name="location_icon">"Location Icon"</string>
+    <string name="today_report">"Today's Report"</string>
 </resources>

@@ -184,7 +184,7 @@ fun HomeElements(
             .padding(start = 15.dp, end = 15.dp), horizontalArrangement = Arrangement.Start
     ) {
         Text(
-            "Today's Report",
+            stringResource(R.string.today_report),
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = poppinsFamily
