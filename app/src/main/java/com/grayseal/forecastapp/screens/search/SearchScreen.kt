@@ -284,7 +284,7 @@ fun favCard(
                 }
                 Image(
                     painter = painterResource(id = image),
-                    contentDescription = "WeatherIcon",
+                    contentDescription = stringResource(R.string.weather_icon),
                     modifier = Modifier
                         .scale(
                             1F
