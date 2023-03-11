@@ -331,7 +331,7 @@ fun DailyCard(day: String, date: String, temperature: String, image: Int) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = stringResource(R.string.temperature),
+                    text = "$temperature°C",
                     fontSize = 26.sp,
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Medium,
