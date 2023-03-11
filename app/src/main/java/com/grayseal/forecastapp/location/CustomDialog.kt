@@ -82,7 +82,7 @@ fun CustomDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(start = 32.dp, end = 32.dp),
-                    onClick = onClick,
+                    onClick = { onClick() },
                     contentPadding = PaddingValues(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent
