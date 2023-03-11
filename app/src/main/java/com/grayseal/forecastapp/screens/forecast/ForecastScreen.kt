@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -93,7 +94,7 @@ fun ForecastMainElements() {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            "Forecast Report",
+            stringResource(R.string.forecast_report),
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
             fontFamily = poppinsFamily
@@ -195,7 +196,7 @@ fun HourlyCard(image: Int, time: String, temperature: String) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(painter = painterResource(id = image), contentDescription = "Weather Icon")
+                Image(painter = painterResource(id = image), contentDescription = stringResource(R.string.weather_icon))
 
             }
             Column(
@@ -225,7 +226,7 @@ fun NextForecast() {
     ) {
         Column(horizontalAlignment = Alignment.Start) {
             Text(
-                "Next forecast",
+                stringResource(R.string.next_forecast),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = poppinsFamily
@@ -330,7 +331,7 @@ fun DailyCard(day: String, date: String, temperature: String, image: Int) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "$temperature°",
+                    text = "$temperature°C",
                     fontSize = 26.sp,
                     fontFamily = poppinsFamily,
                     fontWeight = FontWeight.Medium,
@@ -342,7 +343,7 @@ fun DailyCard(day: String, date: String, temperature: String, image: Int) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(painter = painterResource(id = image), contentDescription = "Weather Icon")
+                Image(painter = painterResource(id = image), contentDescription = stringResource(R.string.weather_icon))
 
             }
         }

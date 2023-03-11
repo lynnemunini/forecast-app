@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -79,7 +80,7 @@ fun SearchScreen(
                     horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        "Pick location",
+                        stringResource(R.string.pick_location),
                         fontSize = 30.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = poppinsFamily
@@ -90,7 +91,7 @@ fun SearchScreen(
                         .fillMaxWidth(), horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        "Find the city that you want to know the detailed weather info at this time ",
+                        stringResource(R.string.find_city),
                         fontSize = 14.sp,
                         fontFamily = poppinsFamily,
                         textAlign = TextAlign.Center
@@ -126,7 +127,7 @@ fun SearchScreen(
                ) {
                    if(list.isEmpty()){
                        Text(
-                           text = "No favourite location added yet!",
+                           text = stringResource(R.string.no_favourite),
                            fontSize = 14.sp,
                            fontWeight = FontWeight.Bold,
                            fontFamily = poppinsFamily,
@@ -283,7 +284,7 @@ fun favCard(
                 }
                 Image(
                     painter = painterResource(id = image),
-                    contentDescription = "WeatherIcon",
+                    contentDescription = stringResource(R.string.weather_icon),
                     modifier = Modifier
                         .scale(
                             1F
@@ -302,7 +303,7 @@ fun favCard(
                 Column(verticalArrangement = Arrangement.Bottom) {
                     Icon(
                         imageVector = Icons.Outlined.Cancel,
-                        contentDescription = "Delete Favourite",
+                        contentDescription = stringResource(R.string.deleted_favourite),
                         tint = Color(0xFFd68118),
                         modifier = Modifier.clickable {
                             favouriteViewModel.deleteFavourite(favourite)
