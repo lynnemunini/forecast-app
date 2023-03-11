@@ -115,7 +115,7 @@ fun SearchScreen(
                             )
                         )
                     } else {
-                        Toast.makeText(context, "No internet connection!", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, stringResource(R.string.no_internet), Toast.LENGTH_LONG).show()
                     }
 
                 }
