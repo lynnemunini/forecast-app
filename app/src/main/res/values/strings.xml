@@ -3,4 +3,5 @@
     <string name="unknown_search">"Sorry, it looks like the area you have tried searching for is unknown." +
                             " Please try again by searching for a more known name of the location.",</string>
     <string name="try_again">"Try Again"</string>
+    <string name="location_icon">"Location Icon"</string>
 </resources>

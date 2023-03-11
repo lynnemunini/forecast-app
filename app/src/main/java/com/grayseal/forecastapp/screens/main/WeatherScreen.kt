@@ -169,7 +169,7 @@ fun HomeElements(
     ) {
         Icon(
             Icons.Outlined.LocationOn,
-            contentDescription = "Location Icon",
+            contentDescription = stringResource(R.string.location_icon),
             tint = colors.secondary
         )
         Text(
