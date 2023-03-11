@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Weather</string>
+    <string name="unknown_search">"Sorry, it looks like the area you have tried searching for is unknown." +
+                            " Please try again by searching for a more known name of the location.",</string>
 </resources>
