@@ -8,4 +8,5 @@
     <string name="pick_location">Pick location</string>
     <string name="find_city">Find the city that you want to know the detailed weather info at this time</string>
     <string name="no_internet">No internet connection!</string>
+    <string name="no_favourite">No favourite location added yet!</string>
 </resources>

@@ -115,7 +115,7 @@ fun SearchScreen(
                             )
                         )
                     } else {
-                        Toast.makeText(context, stringResource(R.string.no_internet), Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, "No internet connection!", Toast.LENGTH_LONG).show()
                     }
 
                 }
@@ -127,7 +127,7 @@ fun SearchScreen(
                ) {
                    if(list.isEmpty()){
                        Text(
-                           text = "No favourite location added yet!",
+                           text = stringResource(R.string.no_favourite),
                            fontSize = 14.sp,
                            fontWeight = FontWeight.Bold,
                            fontFamily = poppinsFamily,
