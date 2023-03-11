@@ -13,4 +13,5 @@
     <string name="deleted_favourite">Delete Favourite</string>
     <string name="forecast_report">Forecast Report</string>
     <string name="next_forecast">Next forecast</string>
+    <string name="temperature">$temperature°</string>
 </resources>
