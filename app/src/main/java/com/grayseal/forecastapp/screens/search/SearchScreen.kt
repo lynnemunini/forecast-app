@@ -303,7 +303,7 @@ fun favCard(
                 Column(verticalArrangement = Arrangement.Bottom) {
                     Icon(
                         imageVector = Icons.Outlined.Cancel,
-                        contentDescription = "Delete Favourite",
+                        contentDescription = stringResource(R.string.deleted_favourite),
                         tint = Color(0xFFd68118),
                         modifier = Modifier.clickable {
                             favouriteViewModel.deleteFavourite(favourite)
