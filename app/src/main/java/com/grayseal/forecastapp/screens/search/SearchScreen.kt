@@ -91,7 +91,7 @@ fun SearchScreen(
                         .fillMaxWidth(), horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
-                        "Find the city that you want to know the detailed weather info at this time ",
+                        stringResource(R.string.find_city),
                         fontSize = 14.sp,
                         fontFamily = poppinsFamily,
                         textAlign = TextAlign.Center
