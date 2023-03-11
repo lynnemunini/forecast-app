@@ -12,4 +12,5 @@
     <string name="weather_icon">WeatherIcon</string>
     <string name="deleted_favourite">Delete Favourite</string>
     <string name="forecast_report">Forecast Report</string>
+    <string name="next_forecast">Next forecast</string>
 </resources>

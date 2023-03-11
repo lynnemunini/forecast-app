@@ -196,7 +196,7 @@ fun HourlyCard(image: Int, time: String, temperature: String) {
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Image(painter = painterResource(id = image), contentDescription = "Weather Icon")
+                Image(painter = painterResource(id = image), contentDescription = stringResource(R.string.weather_icon))
 
             }
             Column(
@@ -226,7 +226,7 @@ fun NextForecast() {
     ) {
         Column(horizontalAlignment = Alignment.Start) {
             Text(
-                "Next forecast",
+                stringResource(R.string.next_forecast),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Medium,
                 fontFamily = poppinsFamily
